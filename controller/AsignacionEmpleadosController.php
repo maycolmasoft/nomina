@@ -1,5 +1,5 @@
 <?php
-class EmpleadosController extends ControladorBase{
+class AsignacionEmpleadosController extends ControladorBase{
     
     public function __construct() {
         parent::__construct();
@@ -12,62 +12,30 @@ class EmpleadosController extends ControladorBase{
     	$id_rol=$_SESSION["id_rol"];
     	$empleados = new EmpleadosModel();
     	$where_to="";
-    	$columnas = " empleados.id_empleados, 
-					  tipo_identificacion.id_tipo_identificacion, 
-					  tipo_identificacion.nombre_tipo_identificacion, 
-					  empleados.identificacion_empleados, 
+    	$columnas = " 
+		    		  empleados.id_empleados,
+		    		  empleados.identificacion_empleados, 
 					  empleados.apellidos_empleados, 
 					  empleados.nombres_empleados, 
-					  provincias.id_provincias, 
-					  provincias.nombre_provincias, 
-					  cantones.id_cantones, 
-					  cantones.nombre_cantones, 
-					  parroquias.id_parroquias, 
-					  parroquias.nombre_parroquias, 
 					  empleados.direccion_empleados, 
 					  empleados.telefono_empleados, 
 					  empleados.celular_empleados, 
 					  empleados.correo_empleados, 
 					  empleados.fecha_nacimiento_empleados, 
-					  sexo.id_sexo, 
-					  sexo.nombre_sexo, 
-					  estado.id_estado, 
-					  estado.nombre_estado, 
-					  departamentos.id_departamentos, 
-					  departamentos.nombre_departamentos, 
-					  estado_civil.id_estado_civil, 
-					  estado_civil.nombre_estado_civil, 
 					  empleados.numero_hijos_empleados, 
-					  empleados.creado,
-    			      empleados.fecha_empieza_a_laborar";
+					  empleados.fecha_empieza_a_laborar,
+  					  departamentos.nombre_departamentos";
     	
-    	$tablas   = "public.empleados, 
-					  public.estado_civil, 
-					  public.sexo, 
-					  public.tipo_identificacion, 
-					  public.departamentos, 
-					  public.provincias, 
-					  public.cantones, 
-					  public.parroquias, 
-					  public.estado";
+    	$tablas   = "public.empleados, public.departamentos";
     	
     	$id       = "empleados.id_empleados";
     	
     	
-    	$where    = "empleados.id_tipo_identificacion = tipo_identificacion.id_tipo_identificacion AND
-					  empleados.id_provincias = provincias.id_provincias AND
-					  empleados.id_cantones = cantones.id_cantones AND
-					  empleados.id_parroquias = parroquias.id_parroquias AND
-					  empleados.id_sexo = sexo.id_sexo AND
-					  empleados.id_estado = estado.id_estado AND
-					  empleados.id_departamentos = departamentos.id_departamentos AND
-					  empleados.id_estado_civil = estado_civil.id_estado_civil AND empleados.id_estado=1";
+    	$where    = "empleados.id_departamentos = departamentos.id_departamentos AND empleados.id_estado=1 AND empleados.id_empleados not in (select asignacion_empleados_cargos.id_empleados from asignacion_empleados_cargos)";
 					    	
-    
     	 
     	$action = (isset($_REQUEST['action'])&& $_REQUEST['action'] !=NULL)?$_REQUEST['action']:'';
     	$search =  (isset($_REQUEST['search'])&& $_REQUEST['search'] !=NULL)?$_REQUEST['search']:'';
-    	 
     	 
     	 
     	 
@@ -76,10 +44,9 @@ class EmpleadosController extends ControladorBase{
     
     		if(!empty($search)){
     
-    
-    			$where1=" AND (empleados.identificacion_empleados LIKE '".$search."%' OR empleados.apellidos_empleados LIKE '".$search."%' OR empleados.nombres_empleados LIKE '".$search."%' OR provincias.nombre_provincias LIKE '".$search."%' OR cantones.nombre_cantones LIKE '".$search."%' OR parroquias.nombre_parroquias LIKE '".$search."%' OR empleados.correo_empleados LIKE '".$search."%' OR sexo.nombre_sexo LIKE '".$search."%' OR sexo.nombre_sexo LIKE '".$search."%' OR departamentos.nombre_departamentos LIKE '".$search."%' OR estado_civil.nombre_estado_civil LIKE '".$search."%')";
-    
+    			$where1=" AND (empleados.identificacion_empleados LIKE '".$search."%' OR empleados.apellidos_empleados LIKE '".$search."%' OR empleados.nombres_empleados LIKE '".$search."%' OR empleados.correo_empleados LIKE '".$search."%' OR departamentos.nombre_departamentos LIKE '".$search."%')";
     			$where_to=$where.$where1;
+    
     		}else{
     
     			$where_to=$where;
@@ -104,8 +71,6 @@ class EmpleadosController extends ControladorBase{
     
     		 
     
-    
-    
     		if($cantidadResult>0)
     		{
     
@@ -118,14 +83,11 @@ class EmpleadosController extends ControladorBase{
     			$html.= "<table id='tabla_empleados' class='tablesorter table table-striped table-bordered dt-responsive nowrap'>";
     			$html.= "<thead>";
     			$html.= "<tr>";
-    			$html.='<th style="text-align: left;  font-size: 12px;">Tipo Ide</th>';
-    			$html.='<th style="text-align: left;  font-size: 12px;">Ci /Ruc</th>';
+    			$html.='<th style="text-align: left;  font-size: 12px;">Ci / Ruc</th>';
     			$html.='<th style="text-align: left;  font-size: 12px;">Apellidos y Nombres</th>';
     			$html.='<th style="text-align: left;  font-size: 12px;">Correo</th>';
     			$html.='<th style="text-align: left;  font-size: 12px;">Fecha Nac</th>';
     			$html.='<th style="text-align: left;  font-size: 12px;">Celular</th>';
-    			$html.='<th style="text-align: left;  font-size: 12px;">Estado Civil</th>';
-    			$html.='<th style="text-align: left;  font-size: 12px;">Género</th>';
     			$html.='<th style="text-align: left;  font-size: 12px;">Departamento</th>';
     			$html.='<th style="text-align: left;  font-size: 12px;">Fecha Empieza Labores</th>';
     
@@ -133,8 +95,7 @@ class EmpleadosController extends ControladorBase{
     			if($id_rol==1){
     				 
     				$html.='<th style="text-align: left;  font-size: 12px;"></th>';
-    				$html.='<th style="text-align: left;  font-size: 12px;"></th>';
-    				 
+    					 
     			}else{
     				 
     				$html.='<th style="text-align: left;  font-size: 12px;"></th>';
@@ -152,30 +113,26 @@ class EmpleadosController extends ControladorBase{
     			{
     				$i++;
     				$html.='<tr>';
-    				$html.='<td style="font-size: 11px;">'.$res->nombre_tipo_identificacion.'</td>';
     				$html.='<td style="font-size: 11px;">'.$res->identificacion_empleados.'</td>';
     				$html.='<td style="font-size: 11px;">'.$res->apellidos_empleados.' '.$res->nombres_empleados.'</td>';
     				$html.='<td style="font-size: 11px;">'.$res->correo_empleados.'</td>';
     				$html.='<td style="font-size: 11px;">'.$res->fecha_nacimiento_empleados.'</td>';
     				$html.='<td style="font-size: 11px;">'.$res->celular_empleados.'</td>';
-    				$html.='<td style="font-size: 11px;">'.$res->nombre_estado_civil.'</td>';
-    				$html.='<td style="font-size: 11px;">'.$res->nombre_sexo.'</td>';
     				$html.='<td style="font-size: 11px;">'.$res->nombre_departamentos.'</td>';
     				$html.='<td style="font-size: 11px;">'.date("d/m/Y", strtotime($res->fecha_empieza_a_laborar)).'</td>';
     				 
     				if($id_rol==1){
     					 
-    					$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=Empleados&action=index&id_empleados='.$res->id_empleados.'" class="btn btn-success" title="Editar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
-    					$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=Empleados&action=borrarId&id_empleados='.$res->id_empleados.'" class="btn btn-danger" title="Eliminar" style="font-size:65%;"><i class="glyphicon glyphicon-trash"></i></a></span></td>';
-    					
+    					$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=AsignacionEmpleados&action=index&id_empleados='.$res->id_empleados.'" class="btn btn-success" title="Asignar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
     					 
     				}else{
     					 
-    					$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=Empleados&action=index&id_empleados='.$res->id_empleados.'" class="btn btn-success" title="Editar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
+    					$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=AsignacionEmpleados&action=index&id_empleados='.$res->id_empleados.'" class="btn btn-success" title="Asignar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
     					
     				}
     				 
     				$html.='</tr>';
+    			
     			}
     
     
@@ -186,13 +143,12 @@ class EmpleadosController extends ControladorBase{
     			$html.=''. $this->paginate_empleados_activos("index.php", $page, $total_pages, $adjacents).'';
     			$html.='</div>';
     
-    
     			 
     		}else{
     			$html.='<div class="col-lg-6 col-md-6 col-xs-12">';
     			$html.='<div class="alert alert-warning alert-dismissable" style="margin-top:40px;">';
     			$html.='<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
-    			$html.='<h4>Aviso!!!</h4> <b>Actualmente no hay empleados activos registrados...</b>';
+    			$html.='<h4>Aviso!!!</h4> <b>Actualmente no hay empleados para asignar rubros...</b>';
     			$html.='</div>';
     			$html.='</div>';
     		}
@@ -210,61 +166,40 @@ class EmpleadosController extends ControladorBase{
     
     public function  index11(){
     	
-
     	session_start();
     	$id_rol=$_SESSION["id_rol"];
     	$empleados = new EmpleadosModel();
     	$where_to="";
-    	$columnas = " empleados.id_empleados,
-					  tipo_identificacion.id_tipo_identificacion,
-					  tipo_identificacion.nombre_tipo_identificacion,
-					  empleados.identificacion_empleados,
-					  empleados.apellidos_empleados,
-					  empleados.nombres_empleados,
-					  provincias.id_provincias,
-					  provincias.nombre_provincias,
-					  cantones.id_cantones,
-					  cantones.nombre_cantones,
-					  parroquias.id_parroquias,
-					  parroquias.nombre_parroquias,
-					  empleados.direccion_empleados,
-					  empleados.telefono_empleados,
-					  empleados.celular_empleados,
-					  empleados.correo_empleados,
-					  empleados.fecha_nacimiento_empleados,
-					  sexo.id_sexo,
-					  sexo.nombre_sexo,
-					  estado.id_estado,
-					  estado.nombre_estado,
-					  departamentos.id_departamentos,
-					  departamentos.nombre_departamentos,
-					  estado_civil.id_estado_civil,
-					  estado_civil.nombre_estado_civil,
-					  empleados.numero_hijos_empleados,
-					  empleados.creado,
-    			      empleados.fecha_empieza_a_laborar";
+    	$columnas = " empleados.identificacion_empleados, 
+					  empleados.apellidos_empleados, 
+					  empleados.nombres_empleados, 
+					  empleados.direccion_empleados, 
+					  empleados.telefono_empleados, 
+					  empleados.celular_empleados, 
+					  empleados.correo_empleados, 
+					  empleados.fecha_nacimiento_empleados, 
+					  empleados.numero_hijos_empleados, 
+					  empleados.fecha_empieza_a_laborar, 
+					  departamentos.nombre_departamentos, 
+					  usuarios.cedula_usuarios, 
+					  usuarios.nombre_usuarios, 
+					  asignacion_empleados_cargos.id_asignacion_empleados_cargos, 
+					  cargos_departamentos.nombre_cargo_departamentos, 
+					  cargos_departamentos.valor_sueldo_cargo_departamentos";
     	 
-    	$tablas   = "public.empleados,
-					  public.estado_civil,
-					  public.sexo,
-					  public.tipo_identificacion,
-					  public.departamentos,
-					  public.provincias,
-					  public.cantones,
-					  public.parroquias,
-					  public.estado";
+    	$tablas   = "public.asignacion_empleados_cargos, 
+					  public.empleados, 
+					  public.departamentos, 
+					  public.usuarios, 
+					  public.cargos_departamentos";
     	 
     	$id       = "empleados.id_empleados";
     	 
     	 
-    	$where    = "empleados.id_tipo_identificacion = tipo_identificacion.id_tipo_identificacion AND
-					  empleados.id_provincias = provincias.id_provincias AND
-					  empleados.id_cantones = cantones.id_cantones AND
-					  empleados.id_parroquias = parroquias.id_parroquias AND
-					  empleados.id_sexo = sexo.id_sexo AND
-					  empleados.id_estado = estado.id_estado AND
-					  empleados.id_departamentos = departamentos.id_departamentos AND
-					  empleados.id_estado_civil = estado_civil.id_estado_civil AND empleados.id_estado=2";
+    	$where    = "asignacion_empleados_cargos.id_cargos_departamentos = cargos_departamentos.id_cargos_departamentos AND
+				  empleados.id_empleados = asignacion_empleados_cargos.id_empleados AND
+				  empleados.id_departamentos = departamentos.id_departamentos AND
+				  usuarios.id_usuarios = asignacion_empleados_cargos.id_usuarios AND empleados.id_estado=1";
     	
     	
     	
@@ -279,7 +214,7 @@ class EmpleadosController extends ControladorBase{
     	
     		if(!empty($search)){
     	
-    			$where1=" AND (empleados.identificacion_empleados LIKE '".$search."%' OR empleados.apellidos_empleados LIKE '".$search."%' OR empleados.nombres_empleados LIKE '".$search."%' OR provincias.nombre_provincias LIKE '".$search."%' OR cantones.nombre_cantones LIKE '".$search."%' OR parroquias.nombre_parroquias LIKE '".$search."%' OR empleados.correo_empleados LIKE '".$search."%' OR sexo.nombre_sexo LIKE '".$search."%' OR sexo.nombre_sexo LIKE '".$search."%' OR departamentos.nombre_departamentos LIKE '".$search."%' OR estado_civil.nombre_estado_civil LIKE '".$search."%')";
+    			$where1=" AND (empleados.identificacion_empleados LIKE '".$search."%' OR empleados.apellidos_empleados LIKE '".$search."%' OR empleados.nombres_empleados LIKE '".$search."%' OR empleados.correo_empleados LIKE '".$search."%' OR departamentos.nombre_departamentos LIKE '".$search."%')";
     			
     			$where_to=$where.$where1;
     		}else{
@@ -317,16 +252,17 @@ class EmpleadosController extends ControladorBase{
     			$html.= "<table id='tabla_clientes' class='tablesorter table table-striped table-bordered dt-responsive nowrap'>";
     			$html.= "<thead>";
     			$html.= "<tr>";
-    			$html.='<th style="text-align: left;  font-size: 12px;">Tipo Ide</th>';
-    			$html.='<th style="text-align: left;  font-size: 12px;">Ci /Ruc</th>';
+    			$html.='<th style="text-align: left;  font-size: 12px;">Ci / Ruc</th>';
     			$html.='<th style="text-align: left;  font-size: 12px;">Apellidos y Nombres</th>';
     			$html.='<th style="text-align: left;  font-size: 12px;">Correo</th>';
-    			$html.='<th style="text-align: left;  font-size: 12px;">Fecha Nac</th>';
     			$html.='<th style="text-align: left;  font-size: 12px;">Celular</th>';
-    			$html.='<th style="text-align: left;  font-size: 12px;">Estado Civil</th>';
-    			$html.='<th style="text-align: left;  font-size: 12px;">Género</th>';
     			$html.='<th style="text-align: left;  font-size: 12px;">Departamento</th>';
-    			$html.='<th style="text-align: left;  font-size: 12px;">Fecha Empieza Laborar.</th>';
+    			$html.='<th style="text-align: left;  font-size: 12px;">Fecha Empieza Labores</th>';
+    			$html.='<th style="text-align: left;  font-size: 12px;">Cargo</th>';
+    			$html.='<th style="text-align: left;  font-size: 12px;">Sueldo</th>';
+    			 
+    			
+    			
     			
     			if($id_rol==1){
     					
@@ -350,25 +286,24 @@ class EmpleadosController extends ControladorBase{
     			{
     				$i++;
     				$html.='<tr>';
-    				$html.='<td style="font-size: 11px;">'.$res->nombre_tipo_identificacion.'</td>';
     				$html.='<td style="font-size: 11px;">'.$res->identificacion_empleados.'</td>';
     				$html.='<td style="font-size: 11px;">'.$res->apellidos_empleados.' '.$res->nombres_empleados.'</td>';
     				$html.='<td style="font-size: 11px;">'.$res->correo_empleados.'</td>';
-    				$html.='<td style="font-size: 11px;">'.$res->fecha_nacimiento_empleados.'</td>';
     				$html.='<td style="font-size: 11px;">'.$res->celular_empleados.'</td>';
-    				$html.='<td style="font-size: 11px;">'.$res->nombre_estado_civil.'</td>';
-    				$html.='<td style="font-size: 11px;">'.$res->nombre_sexo.'</td>';
     				$html.='<td style="font-size: 11px;">'.$res->nombre_departamentos.'</td>';
     				$html.='<td style="font-size: 11px;">'.date("d/m/Y", strtotime($res->fecha_empieza_a_laborar)).'</td>';
-    					
+    				$html.='<td style="font-size: 11px;">'.$res->nombre_cargo_departamentos.'</td>';
+    				$html.='<td style="font-size: 11px;">'.$res->valor_sueldo_cargo_departamentos.'</td>';
+    				
+    				
     				if($id_rol==1){
     				
-    					$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=Empleados&action=index&id_empleados='.$res->id_empleados.'" class="btn btn-success" title="Editar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
+    					$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=AsignacionEmpleados&action=index&id_asignacion_empleados_cargos='.$res->id_asignacion_empleados_cargos.'" class="btn btn-success" title="Editar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
     						
     				
     				}else{
     				
-    					$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=Empleados&action=index&id_empleados='.$res->id_empleados.'" class="btn btn-success" title="Editar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
+    					$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=AsignacionEmpleados&action=index&id_asignacion_empleados_cargos='.$res->id_asignacion_empleados_cargos.'" class="btn btn-success" title="Editar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
     						
     				}
     					
@@ -389,7 +324,7 @@ class EmpleadosController extends ControladorBase{
     			$html.='<div class="col-lg-6 col-md-6 col-xs-12">';
     			$html.='<div class="alert alert-warning alert-dismissable" style="margin-top:40px;">';
     			$html.='<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
-    			$html.='<h4>Aviso!!!</h4> <b>Actualmente no hay empleados inactivos registrados...</b>';
+    			$html.='<h4>Aviso!!!</h4> <b>Actualmente no hay empleados con rubros asignados...</b>';
     			$html.='</div>';
     			$html.='</div>';
     		}
@@ -415,43 +350,24 @@ class EmpleadosController extends ControladorBase{
 		{
 			
 			$empleados = new EmpleadosModel();
-				
-			$provincias = new ProvinciasModel();
-			$resultProvincias= $provincias->getAll("nombre_provincias");
 			
-			$parroquias = new ParroquiasModel();
-			$resultParroquias= $parroquias->getAll("nombre_parroquias");
-			
-			$cantones = new CantonesModel();
-			$resultCantones= $cantones->getAll("nombre_cantones");
-				
-			$tipo_identificacion = new TipoIdentificacionModel();
-			$resultTipIdenti= $tipo_identificacion->getAll("nombre_tipo_identificacion");
-			
-			$estado = new EstadoModel();
-			$resultEst = $estado->getAll("nombre_estado");
-			
-			$sexo = new SexoModel();
-			$resultSexo=$sexo->getAll("nombre_sexo");
-			
-			$estado_civil = new EstadoCivilModel();
-			$resultEstCiv=$estado_civil->getAll("nombre_estado_civil");
-				
-			$estado_civil = new EstadoCivilModel();
-			$resultEstCiv=$estado_civil->getAll("nombre_estado_civil");
-				
+			$asignacion_empleados = new AsignacionEmpleadosModel();
+			$cargos = new CargosDepartamentosModel();
 			$departamentos = new DepartamentosModel();
 			$resultDepa=$departamentos->getAll("nombre_departamentos");
+			
 				
 			
-			$nombre_controladores = "Empleados";
+			$nombre_controladores = "AsignacionEmpleados";
 			$id_rol= $_SESSION['id_rol'];
-			$resultPer = $empleados->getPermisosVer("controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
+			$resultPer = $asignacion_empleados->getPermisosVer("controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
 				
 			if (!empty($resultPer))
 			{
 			
 					$resultEdit = "";
+					$resultEdit1 = "";
+					$resultCar = "";
 			
 					if (isset ($_GET["id_empleados"])   )
 					{
@@ -508,14 +424,76 @@ class EmpleadosController extends ControladorBase{
 								  empleados.id_departamentos = departamentos.id_departamentos AND
 								  empleados.id_estado_civil = estado_civil.id_estado_civil AND empleados.id_empleados = '$_id_empleados' "; 
 						$resultEdit = $empleados->getCondiciones($columnas ,$tablas ,$where, $id); 
+					
+						
+						if(!empty($resultEdit)){
+							
+							$_id_departamentos     =$resultEdit[0]->id_departamentos;
+							
+								if($_id_departamentos>0){
+									
+									$resultCar=$cargos->getBy("id_departamentos='$_id_departamentos'");
+										
+								}
+						}
+					
+						
+						
+					}
+					
+					
+					if (isset ($_GET["id_asignacion_empleados_cargos"])   )
+					{
+						$_id_asignacion_empleados_cargos = $_GET["id_asignacion_empleados_cargos"];
+					
+						$columnas = "empleados.id_empleados, 
+								  empleados.identificacion_empleados, 
+								  empleados.apellidos_empleados, 
+								  empleados.nombres_empleados, 
+								  empleados.direccion_empleados, 
+								  empleados.celular_empleados, 
+								  empleados.telefono_empleados, 
+								  empleados.correo_empleados, 
+								  empleados.fecha_nacimiento_empleados, 
+								  empleados.fecha_empieza_a_laborar, 
+								  departamentos.id_departamentos, 
+								  departamentos.nombre_departamentos, 
+								  cargos_departamentos.id_cargos_departamentos, 
+								  cargos_departamentos.nombre_cargo_departamentos, 
+								  cargos_departamentos.valor_sueldo_cargo_departamentos";
+					
+						$tablas   = " public.empleados, 
+									  public.asignacion_empleados_cargos, 
+									  public.cargos_departamentos, 
+									  public.departamentos";
+					
+						$id       = "empleados.id_empleados";
+					
+					
+						$where    = " empleados.id_departamentos = departamentos.id_departamentos AND
+							  asignacion_empleados_cargos.id_empleados = empleados.id_empleados AND
+							  cargos_departamentos.id_cargos_departamentos = asignacion_empleados_cargos.id_cargos_departamentos AND asignacion_empleados_cargos.id_asignacion_empleados_cargos = '$_id_asignacion_empleados_cargos' ";
+						$resultEdit1 = $empleados->getCondiciones($columnas ,$tablas ,$where, $id);
+					
+					
+						if(!empty($resultEdit1)){
+								
+							$_id_departamentos     =$resultEdit1[0]->id_departamentos;
+								
+							if($_id_departamentos>0){
+									
+								$resultCar=$cargos->getBy("id_departamentos='$_id_departamentos'");
+						
+							}
+						}
+					
+					
 					}
 			
 					
-					$this->view("Empleados",array(
-							"resultEdit" =>$resultEdit, "resultProvincias"=>$resultProvincias,
-							"resultParroquias"=>$resultParroquias, "resultCantones"=>$resultCantones,
-							"resultTipIdenti"=>$resultTipIdenti, "resultEst"=>$resultEst,
-							"resultSexo"=>$resultSexo, "resultEstCiv"=>$resultEstCiv, "resultDepa"=>$resultDepa
+					$this->view("AsignacionEmpleados",array(
+							"resultEdit" =>$resultEdit, "resultEdit1" =>$resultEdit1, "resultDepa"=>$resultDepa,
+							"resultCar"=>$resultCar
 					
 					));
 				
@@ -523,7 +501,7 @@ class EmpleadosController extends ControladorBase{
 			else
 			{
 				$this->view("Error",array(
-						"resultado"=>"No tiene Permisos de Acceso a Empleados"
+						"resultado"=>"No tiene Permisos de Acceso a Asignación Empleados"
 			
 				));
 			
@@ -546,103 +524,37 @@ class EmpleadosController extends ControladorBase{
 	
 	
 	
-	public function InsertaEmpleados(){
+	public function InsertaAsignacionEmpleados(){
 			
 		session_start();
 		
 		if (isset(  $_SESSION['nombre_usuarios']) )
 		{
-			$empleados=new EmpleadosModel();
+		$asignacion_empleados=new AsignacionEmpleadosModel();
 			
-		if (isset ($_POST["identificacion_empleados"]))
+		if (isset ($_POST["id_empleados"]))
 		{
 		
-			$_id_tipo_identificacion    = $_POST["id_tipo_identificacion"];
-			$_identificacion_empleados  = $_POST["identificacion_empleados"];
-			$_apellidos_empleados       = $_POST["apellidos_empleados"];
-			$_nombres_empleados         = $_POST["nombres_empleados"];
-			$_direccion_empleados   	   = $_POST["direccion_empleados"];
-			$_fecha_nacimiento_empleados   = $_POST["fecha_nacimiento_empleados"];
-			$_telefono_empleados        = $_POST["telefono_empleados"];
-			$_celular_empleados         = $_POST["celular_empleados"];
-		    $_correo_empleados          = $_POST["correo_empleados"];
-		    $_id_provincias             = $_POST["id_provincias"];
-		    $_id_cantones               = $_POST["id_cantones"];
-		    $_id_parroquias             = $_POST["id_parroquias"];
-		
-		    $_id_estado                 = $_POST["id_estado"];
-		    $_id_empleados              = $_POST["id_empleados"];
-		    $_id_sexo  					= $_POST["id_sexo"];
-		    
-		    $_id_departamentos          = $_POST["id_departamentos"];
-		    $_id_estado_civil           = $_POST["id_estado_civil"];
-		    $_numero_hijos_empleados    = $_POST["numero_hijos_empleados"];
-		    $_fecha_empieza_a_laborar   = $_POST["fecha_empieza_a_laborar"];
-		    $_id_usuarios               = $_SESSION["id_usuarios"];
+			$_id_empleados                = $_POST["id_empleados"];
+			 $_id_cargos_departamentos    = $_POST["id_cargos_departamentos"];
+			 $_id_usuarios                = $_SESSION["id_usuarios"];
 		    
 		    if($_id_empleados > 0){
 		    	
 		    		
-		    		$colval = "id_tipo_identificacion='$_id_tipo_identificacion',
-		    		identificacion_empleados= '$_identificacion_empleados',
-		    		apellidos_empleados = '$_apellidos_empleados',
-		    		nombres_empleados = '$_nombres_empleados',
-		    		direccion_empleados='$_direccion_empleados',
-		    		fecha_nacimiento_empleados = '$_fecha_nacimiento_empleados',
-		    		telefono_empleados = '$_telefono_empleados',
-		    		celular_empleados = '$_celular_empleados',
-		    		correo_empleados = '$_correo_empleados',
-		    		id_provincias = '$_id_provincias',
-		    		id_cantones = '$_id_cantones',
-		    		id_parroquias= '$_id_parroquias',
-		    		id_estado='$_id_estado',
-		    		id_sexo='$_id_sexo',
-		    		id_departamentos='$_id_departamentos',
-		    		id_estado_civil='$_id_estado_civil',
-		    		numero_hijos_empleados='$_numero_hijos_empleados',
-		    		fecha_empieza_a_laborar='$_fecha_empieza_a_laborar'";
-		    		$tabla = "empleados";
-		    		$where = "id_empleados = '$_id_empleados'";
-		    		$resultado=$empleados->UpdateBy($colval, $tabla, $where);
+		    	$funcion = "ins_asignacion_empleados_cargos";
+		    	$parametros = "'$_id_empleados',
+		    	'$_id_usuarios',
+		    	'$_id_cargos_departamentos'";
+		    	$asignacion_empleados->setFuncion($funcion);
+		    	$asignacion_empleados->setParametros($parametros);
+		    	$resultado=$asignacion_empleados->Insert();
 		    		 
-		    		
 		    	
-		    }else{
-		    	
-
-		    	
-		    
-
-		     	
-		        	$funcion = "ins_empleados";
-		        	$parametros = "'$_id_tipo_identificacion',
-		        	'$_identificacion_empleados',
-		        	'$_apellidos_empleados',
-		        	'$_nombres_empleados',
-		        	'1',
-		        	'$_id_provincias',
-		        	'$_id_cantones',
-		        	'$_id_parroquias',
-		        	'$_direccion_empleados',
-		        	'$_telefono_empleados',
-		        	'$_celular_empleados',
-		        	'$_correo_empleados',
-		        	'$_fecha_nacimiento_empleados',
-		        	'$_id_sexo',
-		        	'$_id_estado',
-		        	'$_id_departamentos',
-		        	'$_id_estado_civil',
-		        	'$_numero_hijos_empleados',
-		        	'$_fecha_empieza_a_laborar',
-		        	'$_id_usuarios'";
-		        	$empleados->setFuncion($funcion);
-		        	$empleados->setParametros($parametros);
-		        	$resultado=$empleados->Insert();
-		        
-		  }
+		    }
 		  
 		   
-		    $this->redirect("Empleados", "index");
+		    $this->redirect("AsignacionEmpleados", "index");
 		}
 		
 	   }else{
@@ -662,89 +574,60 @@ class EmpleadosController extends ControladorBase{
 	
 	
 	
+	
+	
 
-
-	public function AutocompleteCedula(){
+	public function ActualizaAsignacionEmpleados(){
 			
 		session_start();
-		$_id_usuarios= $_SESSION['id_usuarios'];
-		$empleados = new EmpleadosModel();
-		$identificacion_empleados = $_GET['term'];
-			
-		$resultSet=$empleados->getBy("identificacion_empleados LIKE '$identificacion_empleados%'");
-			
-		if(!empty($resultSet)){
 	
-			foreach ($resultSet as $res){
-					
-				$_identificacion_empleados[] = $res->identificacion_empleados;
-			}
-			echo json_encode($_identificacion_empleados);
-		}
-			
-	}
-	
-	
-	
-	
-	
-	public function AutocompleteDevuelveNombres(){
-			
-		session_start();
-		$_id_usuarios= $_SESSION['id_usuarios'];
-		$empleados = new EmpleadosModel();
-			
-		$identificacion_empleados = $_POST['identificacion_empleados'];
-		$resultSet=$empleados->getBy("identificacion_empleados = '$identificacion_empleados'");
-			
-		$respuesta = new stdClass();
-			
-		if(!empty($resultSet)){
-	
-			$respuesta->id_empleados = $resultSet[0]->id_empleados;
-			$respuesta->id_tipo_identificacion = $resultSet[0]->id_tipo_identificacion;
-			$respuesta->id_tipo_identificacion = $resultSet[0]->id_tipo_identificacion;
-			$respuesta->identificacion_empleados = $resultSet[0]->identificacion_empleados;
-			$respuesta->apellidos_empleados = $resultSet[0]->apellidos_empleados;
-			$respuesta->nombres_empleados = $resultSet[0]->nombres_empleados;
-			$respuesta->id_provincias = $resultSet[0]->id_provincias;
-			$respuesta->id_cantones = $resultSet[0]->id_cantones;
-			$respuesta->id_parroquias = $resultSet[0]->id_parroquias;
-			$respuesta->direccion_empleados = $resultSet[0]->direccion_empleados;
-			$respuesta->telefono_empleados = $resultSet[0]->telefono_empleados;
-			$respuesta->celular_empleados = $resultSet[0]->celular_empleados;
-			$respuesta->correo_empleados = $resultSet[0]->correo_empleados;
-			$respuesta->id_estado = $resultSet[0]->id_estado;
-			
-			$respuesta->fecha_nacimiento_empleados = $resultSet[0]->fecha_nacimiento_empleados;
-			$respuesta->id_sexo = $resultSet[0]->id_sexo;
-			$respuesta->id_departamentos = $resultSet[0]->id_departamentos;
-			$respuesta->id_estado_civil = $resultSet[0]->id_estado_civil;
-			$respuesta->numero_hijos_empleados = $resultSet[0]->numero_hijos_empleados;
-			$respuesta->fecha_empieza_a_laborar = $resultSet[0]->fecha_empieza_a_laborar;
-			
-			
-			echo json_encode($respuesta);
-		}
-			
-	}
-	
-	
-	
-	
-	
-	public function borrarId()
-	{
-		if(isset($_GET["id_empleados"]))
+		if (isset(  $_SESSION['nombre_usuarios']) )
 		{
-			$id_empleados=(int)$_GET["id_empleados"];
-			$empleados= new EmpleadosModel();
-			$empleados->UpdateBy("id_estado=2","empleados","id_empleados='$id_empleados'");
+			$asignacion_empleados=new AsignacionEmpleadosModel();
 				
-		}
+			if (isset ($_POST["id_empleados"]))
+			{
 	
-		$this->redirect("Empleados", "index");
+				$_id_empleados                = $_POST["id_empleados"];
+				$_id_cargos_departamentos    = $_POST["id_cargos_departamentos"];
+				$_id_usuarios                = $_SESSION["id_usuarios"];
+	
+				if($_id_empleados > 0){
+					 
+	
+					$funcion = "ins_asignacion_empleados_cargos";
+					$parametros = "'$_id_empleados',
+					'$_id_usuarios',
+					'$_id_cargos_departamentos'";
+					$asignacion_empleados->setFuncion($funcion);
+					$asignacion_empleados->setParametros($parametros);
+					$resultado=$asignacion_empleados->Insert();
+			   
+					 
+				}
+	
+				 
+				$this->redirect("AsignacionEmpleados", "index");
+			}
+	
+		}else{
+		  
+			$error = TRUE;
+			$mensaje = "Te sesión a caducado, vuelve a iniciar sesión.";
+	
+			$this->view("Login",array(
+					"resultSet"=>"$mensaje", "error"=>$error
+			));
+	
+	
+			die();
+		  
+		}
 	}
+	
+	
+	
+	
 	
 	
 	
@@ -884,75 +767,42 @@ class EmpleadosController extends ControladorBase{
 	
 	
 	
-	
-	
-	
 
 
-	public function devuelveCanton()
-	{
+	public function  consulta_salarios(){
+		 
 		session_start();
-		$resultCan = array();
-	
-	
-		if(isset($_POST["id_provincias"]))
+		$_id_usuarios = $_SESSION["id_usuarios"];
+		$cargos = new CargosDepartamentosModel();
+		 
+		$action = (isset($_REQUEST['action'])&& $_REQUEST['action'] !=NULL)?$_REQUEST['action']:'';
+		$id_cargos_departamentos =  (isset($_REQUEST['id_cargos_departamentos'])&& $_REQUEST['id_cargos_departamentos'] !=NULL)?$_REQUEST['id_cargos_departamentos']:0;
+		 
+		if($action == 'ajax' && $_id_usuarios>0 && $id_cargos_departamentos > 0)
 		{
-	
-			$id_provincias=(int)$_POST["id_provincias"];
-	
-			$cantones=new CantonesModel();
-	
-			$resultCan = $cantones->getBy(" id_provincias = '$id_provincias'  ");
-	
-	
+			 
+			$columnas_enc = " cargos_departamentos.id_cargos_departamentos, 
+							  cargos_departamentos.nombre_cargo_departamentos, 
+							  cargos_departamentos.valor_sueldo_cargo_departamentos";
+			$tablas_enc ="public.cargos_departamentos";
+			$where_enc ="1=1
+			AND cargos_departamentos.id_cargos_departamentos='$id_cargos_departamentos'";
+			$id_enc="cargos_departamentos.id_cargos_departamentos";
+			$resultSet=$cargos->getCondiciones($columnas_enc ,$tablas_enc ,$where_enc, $id_enc);
+				
+			if(!empty($resultSet)){
+				 
+				$_numero    =$resultSet[0]->valor_sueldo_cargo_departamentos;
+				 
+				 
+				 
+				echo $_numero;
+			}
+				
+		  
 		}
-	
-		
-			
-		echo json_encode($resultCan);
-	
+		 
 	}
-	
-	
-	
-	
-	
-	
-	
-	public function devuelveParroquias()
-	{
-		session_start();
-		$resultParr = array();
-	
-	
-		if(isset($_POST["id_cantones"]))
-		{
-	
-			$id_cantones_vivienda=(int)$_POST["id_cantones"];
-	
-			$parroquias=new ParroquiasModel();
-	
-			$resultParr = $parroquias->getBy(" id_cantones = '$id_cantones_vivienda'  ");
-	
-	
-		}
-		
-			
-		echo json_encode($resultParr);
-	
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
 	
 	
 	

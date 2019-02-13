@@ -4,7 +4,7 @@
   
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Capremci</title>
+    <title>Milenio</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     
     
@@ -12,45 +12,7 @@
    <?php include("view/modulos/links_css.php"); ?>
    
   </head>
-   <script>
-		    // cada vez que se cambia el valor del combo
-		    $(document).ready(function(){
-		    
-		    $("#Guardar").click(function() 
-			{
-		    	var regex = /[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
-		    	var validaFecha = /([0-9]{4})\-([0-9]{2})\-([0-9]{2})/;
-
-		    	var nombre_controladores = $("#nombre_rol").val();
-		    	
-		    	
-		    	
-		    	if (nombre_controladores == "")
-		    	{
-			    	
-		    		$("#mensaje_nombre_rol").text("Introduzca Un Rol");
-		    		$("#mensaje_nombre_rol").fadeIn("slow"); //Muestra mensaje de error
-		            return false;
-			    }
-		    	else 
-		    	{
-		    		$("#mensaje_nombre_rol").fadeOut("slow"); //Muestra mensaje de error
-		            
-				}   
-
-
-		    	
-			}); 
-
-
-		        $( "##mensaje_nombre_rol" ).focus(function() {
-				  $("##mensaje_nombre_rol").fadeOut("slow");
-			    });
-		        		      
-				    
-		}); 
-
-	</script>
+   
   <body class="hold-transition skin-blue fixed sidebar-mini">   
   <?php
         
@@ -122,14 +84,18 @@
                     		            
                     		            
                      <?php } ?>
-                     	<div class="row">
-            			    <div class="col-xs-12 col-md-4 col-md-4 " style="margin-top:15px;  text-align: center; ">
-                	   		    <div class="form-group">
-            	                  <button type="submit" id="Guardar" name="Guardar" class="btn btn-success">Guardar</button>
-        	                    </div>
-    	        		    </div>
-            		    </div>
-          		 	
+                    
+                       <div class="row">
+                    		    <div class="col-xs-12 col-md-12 col-lg-12" style="text-align: center; margin-top:20px">
+                    		    <div class="form-group">
+                                                      <button type="submit" id="Guardar" name="Guardar" class="btn btn-success"><i class="glyphicon glyphicon-floppy-saved"> Guardar</i></button>
+                                					  <button type="button" id="Cancelar" name="Cancelar" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-remove"> Cancelar</i></button>
+                                
+                                </div>
+                    		    </div>
+                    		    </div>
+                    	           	
+                    
           		 	</form>
           
         			</div>
@@ -200,38 +166,52 @@
     
    <?php include("view/modulos/links_js.php"); ?>
     	
+    	
+    	<script>
+		    // cada vez que se cambia el valor del combo
+		    $(document).ready(function(){
+		    
+		    $("#Guardar").click(function() 
+			{
+		    	var regex = /[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
+		    	var validaFecha = /([0-9]{4})\-([0-9]{2})\-([0-9]{2})/;
+
+		    	var nombre_controladores = $("#nombre_rol").val();
+		    	
+		    	
+		    	
+		    	if (nombre_controladores == "")
+		    	{
+			    	
+		    		$("#mensaje_nombre_rol").text("Introduzca Un Rol");
+		    		$("#mensaje_nombre_rol").fadeIn("slow"); //Muestra mensaje de error
+		            return false;
+			    }
+		    	else 
+		    	{
+		    		$("#mensaje_nombre_rol").fadeOut("slow"); //Muestra mensaje de error
+		            
+				}   
+
+
+		    	
+			}); 
+
+
+		        $( "#nombre_rol" ).focus(function() {
+				  $("#mensaje_nombre_rol").fadeOut("slow");
+			    });
+		        		      
+				    
+		}); 
+
+	</script>
+    	
+    	
   </body>
 </html>
 
-<!-- script pagina anterior -->
-<script type="text/javascript">
-     
-        	   $(document).ready( function (){
-        		   pone_espera();
-        		   
-	   			});
 
-        	   function pone_espera(){
-
-        		   $.blockUI({ 
-        				message: '<h4><img src="view/images/load.gif" /> Espere por favor, estamos procesando su requerimiento...</h4>',
-        				css: { 
-        		            border: 'none', 
-        		            padding: '15px', 
-        		            backgroundColor: '#000', 
-        		            '-webkit-border-radius': '10px', 
-        		            '-moz-border-radius': '10px', 
-        		            opacity: .5, 
-        		            color: '#fff',
-        		           
-        	        		}
-        	    });
-            	
-		        setTimeout($.unblockUI, 3000); 
-		        
-        	   }
-
- </script>
        
        
       

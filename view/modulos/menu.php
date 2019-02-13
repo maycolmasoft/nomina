@@ -44,11 +44,11 @@ $controladores=$_SESSION['controladores'];
             <li style="<?php echo getcontrolador("Controladores",$controladores) ?>"><a href="index.php?controller=Controladores&action=index"><i class="fa fa-circle-o"></i> Controladores</a></li>
             <li style="<?php echo getcontrolador("Roles",$controladores) ?>"><a href="index.php?controller=Roles&action=index"><i class="fa fa-circle-o"></i> Roles de Usuario</a></li>
             <li style="<?php echo getcontrolador("PermisosRoles",$controladores) ?>"><a href="index.php?controller=PermisosRoles&action=index"><i class="fa fa-circle-o"></i> Permisos Roles</a></li>
-            <li style="<?php echo getcontrolador("Estado",$controladores) ?>"><a href="index.php?controller=Estado&action=index"><i class="fa fa-circle-o"></i> Estado</a></li>
-            <li style="<?php echo getcontrolador("Privilegios",$controladores) ?>"><a href="index.php?controller=Privilegios&action=index"><i class="fa fa-circle-o"></i> Privilegios</a></li>
-            <li style="<?php echo getcontrolador("Actividades",$controladores) ?>"><a href="index.php?controller=Actividades&action=index"><i class="fa fa-circle-o"></i> Actividades</a></li>
-
-            
+            <li style="<?php echo getcontrolador("Empleados",$controladores) ?>"><a href="index.php?controller=Empleados&action=index"><i class="fa fa-circle-o"></i> Empleados</a></li>
+            <li style="<?php echo getcontrolador("AsignacionEmpleados",$controladores) ?>"><a href="index.php?controller=AsignacionEmpleados&action=index"><i class="fa fa-circle-o"></i> Asignar Rubros Empleados</a></li>
+            <li style="<?php echo getcontrolador("CargosDepartamentos",$controladores) ?>"><a href="index.php?controller=CargosDepartamentos&action=index"><i class="fa fa-circle-o"></i> Cargos Departamentos</a></li>
+            <li style="<?php echo getcontrolador("RubrosVariables",$controladores) ?>"><a href="index.php?controller=RubrosVariables&action=index"><i class="fa fa-circle-o"></i> Rubros Variables</a></li>
+          
           </ul>
         </li>
         
