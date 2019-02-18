@@ -49,8 +49,9 @@ $controladores=$_SESSION['controladores'];
             <li style="<?php echo getcontrolador("CargosDepartamentos",$controladores) ?>"><a href="index.php?controller=CargosDepartamentos&action=index"><i class="fa fa-circle-o"></i> Cargos Departamentos</a></li>
             <li style="<?php echo getcontrolador("RubrosVariables",$controladores) ?>"><a href="index.php?controller=RubrosVariables&action=index"><i class="fa fa-circle-o"></i> Rubros Variables</a></li>
             <li style="<?php echo getcontrolador("Empleados",$controladores) ?>"><a href="index.php?controller=Procesos&action=index"><i class="fa fa-circle-o"></i>Subir Biometrico</a></li>
-          
-          </ul>
+            <li style="<?php echo getcontrolador("TipoRubros",$controladores) ?>"><a href="index.php?controller=TipoRubros&action=index"><i class="fa fa-circle-o"></i>Tipo Rubros</a></li>
+            <li style="<?php echo getcontrolador("Departamentos",$controladores) ?>"><a href="index.php?controller=Departamentos&action=index"><i class="fa fa-circle-o"></i>Departamentos</a></li>
+         </ul>
         </li>
         
         
