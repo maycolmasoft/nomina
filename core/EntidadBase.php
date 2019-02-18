@@ -136,6 +136,21 @@ class EntidadBase{
         return $query;
     }
     
+    
+    public function deleteAll($where){
+        
+        try
+        {
+            $query=pg_query($this->con,"DELETE FROM $this->table WHERE $where ");
+        }
+        catch (Exeption $Ex)
+        {
+            
+            
+        }
+        
+        return $query;
+    }
 
     public function getCondiciones($columnas ,$tablas , $where, $id){
     	

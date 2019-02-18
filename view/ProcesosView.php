@@ -42,7 +42,7 @@
           </h1>
           <ol class="breadcrumb">
             <li><a href="<?php echo $helper->url("Usuarios","Bienvenida"); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Roles</li>
+            <li class="active">Biométrico</li>
           </ol>
         </section>
         
@@ -64,11 +64,17 @@
                   <div class="row">
                     <div class="col-xs-12 col-md-5 col-md-5 ">
                       <div class="form-group">
-                              <label for="nombre_rol" class="control-label">Nombres Rol</label>                              
-                              <input type="file" class="form-control" id="file_biometrico" name="file_biometrico"  required="required">
-                              <div id="mensaje_nombre_rol" class="errores"></div>
+                              <label for="file_biometrico" class="control-label">Seleccione Archivo:</label>                              
+                              <input type="file" class="form-control" id="file_biometrico" name="file_biometrico">
+                              <div id="mensaje_file_biometrico" class="errores"></div>
                         </div>
                       </div>
+                      
+                      
+                      
+                      
+                      
+                      
                     </div>	
                     		
                     
@@ -129,26 +135,48 @@
 		    // cada vez que se cambia el valor del combo
 		    $(document).ready(function(){
 		    
-		    $("#Guardar").click(function() 
+		    $("#Subir").click(function() 
 			{
 		    	var regex = /[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
 		    	var validaFecha = /([0-9]{4})\-([0-9]{2})\-([0-9]{2})/;
 
-		    	var nombre_controladores = $("#nombre_rol").val();
+		    	var file_biometrico = $("#file_biometrico").val();
 		    	
+		    	 extensiones_permitidas = new Array(".txt"); 
+		    	 mierror = ""; 
 		    	
-		    	
-		    	if (nombre_controladores == "")
+		    	if (file_biometrico == "")
 		    	{
 			    	
-		    		$("#mensaje_nombre_rol").text("Introduzca Un Rol");
-		    		$("#mensaje_nombre_rol").fadeIn("slow"); //Muestra mensaje de error
+		    		$("#mensaje_file_biometrico").text("Seleccione Archivo");
+		    		$("#mensaje_file_biometrico").fadeIn("slow"); //Muestra mensaje de error
 		            return false;
 			    }
 		    	else 
 		    	{
-		    		$("#mensaje_nombre_rol").fadeOut("slow"); //Muestra mensaje de error
-		            
+		    		$("#mensaje_file_biometrico").fadeOut("slow"); //Muestra mensaje de error
+
+
+		    		if(file_biometrico != ""){ 
+			  		      extension = (file_biometrico.substring(file_biometrico.lastIndexOf("."))).toLowerCase(); 
+			  		      permitida = false; 
+			  		      for (var i = 0; i < extensiones_permitidas.length; i++) { 
+			  		         if (extensiones_permitidas[i] == extension) { 
+			  		         permitida = true; 
+			  		         break; 
+			  		         } 
+			  		      } 
+			  		      if (!permitida) { 
+			  		    	  $("#mensaje_file_biometrico").text("Sólo se pueden subir archivos con extensiones: "+ extensiones_permitidas.join());
+			  		    	  $("#mensaje_file_biometrico").fadeIn("slow"); //Muestra mensaje de error
+
+			  		    	   return false;
+
+				  			}else{ 
+			  			        $("#mensaje_file_biometrico").fadeOut("slow"); //Muestra mensaje de error
+			  		      	} 
+			  		   }
+
 				}   
 
 
@@ -156,8 +184,8 @@
 			}); 
 
 
-		        $( "#nombre_rol" ).focus(function() {
-				  $("#mensaje_nombre_rol").fadeOut("slow");
+		        $( "#file_biometrico" ).focus(function() {
+				  $("#mensaje_file_biometrico").fadeOut("slow");
 			    });
 		        		      
 				    
