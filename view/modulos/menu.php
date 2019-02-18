@@ -51,7 +51,10 @@ $controladores=$_SESSION['controladores'];
             <li style="<?php echo getcontrolador("Empleados",$controladores) ?>"><a href="index.php?controller=Procesos&action=index"><i class="fa fa-circle-o"></i>Subir Biometrico</a></li>
             <li style="<?php echo getcontrolador("TipoRubros",$controladores) ?>"><a href="index.php?controller=TipoRubros&action=index"><i class="fa fa-circle-o"></i>Tipo Rubros</a></li>
             <li style="<?php echo getcontrolador("Departamentos",$controladores) ?>"><a href="index.php?controller=Departamentos&action=index"><i class="fa fa-circle-o"></i>Departamentos</a></li>
+            <li style="<?php echo getcontrolador("Formulas",$controladores) ?>"><a href="index.php?controller=Formulas&action=index"><i class="fa fa-circle-o"></i>Formulas</a></li>
+    
          </ul>
+    
         </li>
         
         
