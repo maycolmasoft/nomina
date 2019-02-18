@@ -699,7 +699,7 @@
        {
 
 
-    		  if(id_tipo_rubros == 1 || id_tipo_rubros == 3)
+    		  if(id_tipo_rubros == 1 || id_tipo_rubros == 3 || id_tipo_rubros == 4 || id_tipo_rubros == 5 || id_tipo_rubros == 6 || id_tipo_rubros == 7 || id_tipo_rubros == 8)
     	       {
     	    	  
     	    	   $("#div_datos_bono").fadeIn("slow");
@@ -752,8 +752,9 @@
 	          {
 
 
-	       		  if(id_tipo_rubros == 1 || id_tipo_rubros == 3)
-	       	       {
+	       		 if(id_tipo_rubros == 1 || id_tipo_rubros == 3 || id_tipo_rubros == 4 || id_tipo_rubros == 5 || id_tipo_rubros == 6 || id_tipo_rubros == 7 || id_tipo_rubros == 8)
+	        	     
+		       	  {
 	       	    	  
 	       	    	   $("#div_datos_bono").fadeIn("slow");
 	       	    	   $("#div_datos_horas_extras").fadeOut("slow");

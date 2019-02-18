@@ -48,6 +48,7 @@ $controladores=$_SESSION['controladores'];
             <li style="<?php echo getcontrolador("AsignacionEmpleados",$controladores) ?>"><a href="index.php?controller=AsignacionEmpleados&action=index"><i class="fa fa-circle-o"></i> Asignar Rubros Empleados</a></li>
             <li style="<?php echo getcontrolador("CargosDepartamentos",$controladores) ?>"><a href="index.php?controller=CargosDepartamentos&action=index"><i class="fa fa-circle-o"></i> Cargos Departamentos</a></li>
             <li style="<?php echo getcontrolador("RubrosVariables",$controladores) ?>"><a href="index.php?controller=RubrosVariables&action=index"><i class="fa fa-circle-o"></i> Rubros Variables</a></li>
+            <li style="<?php echo getcontrolador("RolPagos",$controladores) ?>"><a href="index.php?controller=RolPagos&action=index"><i class="fa fa-circle-o"></i> Generar Rol Pagos</a></li>
           
           </ul>
         </li>

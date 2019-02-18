@@ -389,7 +389,9 @@ class RubrosVariablesController extends ControladorBase{
 		    	mes_afectacion = '$_mes_afectacion',
 		    	anio_afectacion = '$_anio_afectacion',
 		    	numero_horas_extras_50_porciento = '$_numero_horas_extras_50_porciento',
-		    	numero_horas_extras_100_porciento = '$_numero_horas_extras_100_porciento'";
+		    	numero_horas_extras_100_porciento = '$_numero_horas_extras_100_porciento',
+		    	valor_horas_extras_50_porciento = '$_valor_horas_50',
+		    	valor_horas_extras_100_porciento = '$_valor_horas_100'";
 		    	$tabla = "rubros_variables_empleados";
 		    	$where = "id_rubros_variables_empleados = '$_id_rubros_variables_empleados'";
 		    	$resultado=$rubros->UpdateBy($colval, $tabla, $where);
@@ -408,7 +410,9 @@ class RubrosVariablesController extends ControladorBase{
 		    	'$_mes_afectacion',
 		    	'$_anio_afectacion',
 		    	'$_numero_horas_extras_50_porciento',
-		    	'$_numero_horas_extras_100_porciento'";
+		    	'$_numero_horas_extras_100_porciento',
+		    	'$_valor_horas_50',
+		    	'$_valor_horas_100'";
 		    	$rubros->setFuncion($funcion);
 		    	$rubros->setParametros($parametros);
 		    	$resultado=$rubros->Insert();
