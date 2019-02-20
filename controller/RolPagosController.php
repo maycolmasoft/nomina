@@ -689,10 +689,7 @@ class RolPagosController extends ControladorBase{
 					$html.='</table>';
 		
 		
-		
-		
 					$html.='<table style="width: 100%; margin-top:40px;">';
-		
 					$html.='<tr>';
 					$html.='<th colspan="4" style="text-align:left; font-size: 13px;">Cajero</th>';
 					$html.='<th colspan="4" style="text-align:left; font-size: 13px;"></th>';
