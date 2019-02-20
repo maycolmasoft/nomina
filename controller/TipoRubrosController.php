@@ -88,23 +88,16 @@ class TipoRubrosController extends ControladorBase{
         
         session_start();
         
-        $permisos_rol=new PermisosRolesModel();
-        $tipo_rubros=new TipoRubrosModel();
-        $nombre_controladores = "TipoRubros";
-        $id_rol= $_SESSION['id_rol'];
-        $resultPer = $permisos_rol->getPermisosEditar("   controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
-        
-        if (!empty($resultPer))
+       
+        if (isset($_SESSION["id_usuarios"]))
         {
-            $resultado = null;
+          
             
             $tipo_rubros=new TipoRubrosModel();
             
             if (isset ($_POST["nombre_tipo_rubros"]) )
             
             {
-                
-                
                 
                 $_nombre_tipo_rubros = $_POST["nombre_tipo_rubros"];
                 $_id_tipo_rubros = $_POST["id_tipo_rubros"];
@@ -138,11 +131,15 @@ class TipoRubrosController extends ControladorBase{
         }
         else
         {
-            $this->view("Error",array(
-                
-                "resultado"=>"No tiene Permisos de Insertar Tipo Rubros"
-                
+            $error = TRUE;
+            $mensaje = "Te sesión a caducado, vuelve a iniciar sesión.";
+            
+            $this->view("Login",array(
+                "resultSet"=>"$mensaje", "error"=>$error
             ));
+            
+            
+            die();
             
             
         }
@@ -154,12 +151,7 @@ class TipoRubrosController extends ControladorBase{
         
         session_start();
         
-        $permisos_rol=new PermisosRolesModel();
-        $nombre_controladores = "TipoRubros";
-        $id_rol= $_SESSION['id_rol'];
-        $resultPer = $permisos_rol->getPermisosEditar("   controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
-        
-        if (!empty($resultPer))
+        if (isset($_SESSION["id_usuarios"]))
         {
             if(isset($_GET["id_tipo_rubros"]))
             {
@@ -177,10 +169,15 @@ class TipoRubrosController extends ControladorBase{
         }
         else
         {
-            $this->view("Error",array(
-                "resultado"=>"No tiene Permisos de Borrar Tipo Rubros"
-                
+            $error = TRUE;
+            $mensaje = "Te sesión a caducado, vuelve a iniciar sesión.";
+            
+            $this->view("Login",array(
+                "resultSet"=>"$mensaje", "error"=>$error
             ));
+            
+            
+            die();
         }
         
     }

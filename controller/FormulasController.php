@@ -10,18 +10,37 @@ class FormulasController extends ControladorBase{
     
     public function index(){
         
-        
-        $formulas = new FormulasModel();
-        $resultSet=$formulas->getAll("id_formulas");
-        $resultEdit = "";
-        $tipo_formulas = new TipoFormulasModel();
-        $resultFor=$tipo_formulas->getAll("nombre_tipo_formulas");
-        
-        
+      
         session_start();
         
         if (isset($_SESSION['nombre_usuarios']))
         {
+            
+            
+            $formulas = new FormulasModel();
+            
+            $columnas="formulas.id_formulas, 
+                      tipo_formulas.id_tipo_formulas, 
+                      tipo_formulas.nombre_tipo_formulas, 
+                      formulas.porcentaje_formulas, 
+                      formulas.creado";
+            $tablas="public.formulas, 
+                     public.tipo_formulas";
+            $where="tipo_formulas.id_tipo_formulas = formulas.id_tipo_formulas";
+            $id="formulas.id_formulas";
+            
+            $resultSet=$formulas->getCondiciones($columnas, $tablas, $where, $id);
+            
+            
+            
+            
+            $resultEdit = "";
+            $tipo_formulas = new TipoFormulasModel();
+            $resultFor=$tipo_formulas->getAll("nombre_tipo_formulas");
+            
+            
+            
+            
             $nombre_controladores = "Formulas";
             $id_rol= $_SESSION['id_rol'];
             $resultPer = $formulas->getPermisosVer("   controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
@@ -91,25 +110,18 @@ class FormulasController extends ControladorBase{
         
         session_start();
         
-        $permisos_rol=new PermisosRolesModel();
-        $formulas=new FormulasModel();
-        $nombre_controladores = "Formulas";
-        
-        $id_rol= $_SESSION['id_rol'];
-        $resultPer = $permisos_rol->getPermisosEditar("   controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
-        
-        if (!empty($resultPer))
+       
+        if (isset($_SESSION["id_usuarios"]))
         {
-            $resultado = null;
-            
+           
             $formulas=new FormulasModel();
             
-            if (isset ($_POST["id_formulas"]) )
+            if (isset ($_POST["id_tipo_formulas"]) )
             
             {
                 
                 
-                
+                $_id_formulas = $_POST["id_formulas"];
                 $_id_tipo_formulas = $_POST["id_tipo_formulas"];
                 $_porcentaje_formulas = $_POST["porcentaje_formulas"];
                 
@@ -118,7 +130,7 @@ class FormulasController extends ControladorBase{
                     
                     $colval = " id_tipo_formulas = '$_id_tipo_formulas', porcentaje_formulas = '$_porcentaje_formulas'   ";
                     $tabla = "formulas";
-                    $where = "porcentaje_formulas = '$_porcentaje_formulas'    ";
+                    $where = "id_formulas = '$_id_formulas'    ";
                     
                     $resultado=$formulas->UpdateBy($colval, $tabla, $where);
                     
@@ -142,11 +154,15 @@ class FormulasController extends ControladorBase{
         }
         else
         {
-            $this->view("Error",array(
-                
-                "resultado"=>"No tiene Permisos de Insertar Formulas"
-                
+            $error = TRUE;
+            $mensaje = "Te sesión a caducado, vuelve a iniciar sesión.";
+            
+            $this->view("Login",array(
+                "resultSet"=>"$mensaje", "error"=>$error
             ));
+            
+            
+            die();
             
             
         }
@@ -158,20 +174,19 @@ class FormulasController extends ControladorBase{
         
         session_start();
         
-        $permisos_rol=new PermisosRolesModel();
-        $nombre_controladores = "Formulas";
-        $id_rol= $_SESSION['id_rol'];
-        $resultPer = $permisos_rol->getPermisosEditar("   controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
-        
-        if (!empty($resultPer))
+       
+        if (isset($_SESSION["id_usuarios"]))
         {
+            
             if(isset($_GET["id_formulas"]))
             {
+               
+                
                 $id_formulas=(int)$_GET["id_formulas"];
                 
                 $formulas=new FormulasModel();
                 
-                $formulas->deleteBy(" id_formulas");
+                $formulas->deleteBy('id_formulas', $id_formulas);
                 
             }
             
@@ -181,10 +196,15 @@ class FormulasController extends ControladorBase{
         }
         else
         {
-            $this->view("Error",array(
-                "resultado"=>"No tiene Permisos de Borrar Formulas"
-                
+            $error = TRUE;
+            $mensaje = "Te sesión a caducado, vuelve a iniciar sesión.";
+            
+            $this->view("Login",array(
+                "resultSet"=>"$mensaje", "error"=>$error
             ));
+            
+            
+            die();
         }
         
     }

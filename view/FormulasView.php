@@ -62,7 +62,7 @@
     <section class="content">
      <div class="box box-primary">
      <div class="box-header">
-          <h3 class="box-title">Registrar Departamentos</h3>
+          <h3 class="box-title">Registrar Formulas</h3>
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
               <i class="fa fa-minus"></i></button>
@@ -87,14 +87,16 @@
 				 												<option value="<?php echo $resFor->id_tipo_formulas; ?>" <?php if ($resFor->id_tipo_formulas == $resEdit->id_tipo_formulas )  echo  ' selected="selected" '  ;  ?> ><?php echo $resFor->nombre_tipo_formulas; ?> </option>
 													            <?php } ?>
 								    					  </select>
-		   		   										  <div id="mensaje_tipo_formulas" class="errores"></div>
+		   		   										  <div id="mensaje_id_tipo_formulas" class="errores"></div>
                                     </div>
                                     </div>
                               		 <div class="col-xs-12 col-md-3 col-md-3 ">
                             		    <div class="form-group">
                             		   						 
                                                               <label for="porcentaje_formulas" class="control-label">Porcentaje</label>
-                                                              <input type="text" class="form-control" id="porcentaje_formulas" name="porcentaje_formulas" value="<?php echo $resEdit->porcentaje_formulas; ?>"  placeholder="Porcentaje"/>
+                                                                <input type="text" class="form-control cantidades1" id="porcentaje_formulas" name="porcentaje_formulas" value='<?php echo $resEdit->porcentaje_formulas; ?>' 
+                                                               data-inputmask="'alias': 'numeric', 'autoGroup': true, 'digits': 2, 'digitsOptional': false" >
+                                 		        	  
                                                                <input type="hidden" name="id_formulas" id="id_formulas" value="<?php echo $resEdit->id_formulas; ?>" class="form-control"/>
 					                                          <div id="mensaje_porcentaje_formulas" class="errores"></div>
 					                                          				                                          
@@ -117,13 +119,13 @@
                         			    <div class="col-xs-12 col-md-2 col-md-2">
                         		    <div class="form-group">
                                                           <label for="id_tipo_formulas" class="control-label">Tipo de Formulas</label>
-                                                          <select name="id_rol" id="id_tipo_formulas"  class="form-control">
+                                                          <select name="id_tipo_formulas" id="id_tipo_formulas"  class="form-control">
                                                             <option value="0" selected="selected">--Seleccione--</option>
 																<?php foreach($resultFor as $resFor) {?>
 				 												<option value="<?php echo $resFor->id_tipo_formulas; ?>"  ><?php echo $resFor->nombre_tipo_formulas; ?> </option>
 													            <?php } ?>
 								    					  </select>
-		   		   										   <div id="mensaje_tipo_formulas" class="errores"></div>
+		   		   										   <div id="mensaje_id_tipo_formulas" class="errores"></div>
                                     </div>
                                     </div>
                         	  
@@ -132,7 +134,11 @@
                             		    <div class="form-group">
                             		    					  
                                                               <label for="porcentaje_formulas" class="control-label">Porcentaje</label>
-                                                              <input  type="text" class="form-control" id="porcentaje_formulas" name="porcentaje_formulas" value=""  placeholder="Porcentaje"/>
+                                                               <input type="text" class="form-control cantidades1" id="porcentaje_formulas" name="porcentaje_formulas" value='0.00' 
+                                                               data-inputmask="'alias': 'numeric', 'autoGroup': true, 'digits': 2, 'digitsOptional': false" >
+                                 		        	  
+                                                               <input type="hidden" name="id_formulas" id="id_formulas" value="0" class="form-control"/>
+					                                         
                                                               <div id="mensaje_porcentaje_formulas" class="errores"></div>
                                                               	
                                                               
@@ -166,7 +172,7 @@
      <section class="content">
       <div class="box box-primary">
         <div class="box-header with-border">
-          <h3 class="box-title">Listado de Departamentos Registrados</h3>
+          <h3 class="box-title">Listado de Formulas</h3>
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
               <i class="fa fa-minus"></i></button>
@@ -185,8 +191,9 @@
                         <tr>
                           <th>#</th>
                           <th>Nombre</th>
-                          <th>Editar</th>
-                          <th>Borrar</th>
+                          <th>Porcentaje</th>
+                          <th></th>
+                           <th></th>
                         </tr>
                       </thead>
 
@@ -197,7 +204,7 @@
     						<?php $i++;?>
             	        		<tr>
             	                   <td > <?php echo $i; ?>  </td>
-            		               <td > <?php echo $res->id_tipo_formulas; ?>     </td> 
+            		               <td > <?php echo $res->nombre_tipo_formulas; ?>     </td> 
             		               <td > <?php echo $res->porcentaje_formulas; ?>     </td> 
             		           
             		               <td>
@@ -236,6 +243,13 @@
     <?php include("view/modulos/links_js.php"); ?>
 	
 
+	<script src="view/bootstrap/otros/inputmask_bundle/jquery.inputmask.bundle.js"></script>
+       <script>
+      $(document).ready(function(){
+      $(".cantidades1").inputmask();
+      });
+	  </script>
+   
        
          <script>
 		    // cada vez que se cambia el valor del combo
@@ -246,31 +260,46 @@
 		    	var regex = /[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
 		    	var validaFecha = /([0-9]{4})\-([0-9]{2})\-([0-9]{2})/;
 
-		    	var nombre_departamentos = $("#nombre_departamentos").val();
+		    	var id_tipo_formulas = $("#id_tipo_formulas").val();
+		    	var porcentaje_formulas = $("#porcentaje_formulas").val();
 		    	
 		    	
 		    	
-		    	if (nombre_departamentos == "")
+		    	if (id_tipo_formulas == 0)
 		    	{
 			    	
-		    		$("#mensaje_nombre_departamentos").text("Introduzca Un Tipo de Departamentos");
-		    		$("#mensaje_nombre_departamentos").fadeIn("slow"); //Muestra mensaje de error
+		    		$("#mensaje_id_tipo_formulas").text("Seleccione");
+		    		$("#mensaje_id_tipo_formulas").fadeIn("slow"); //Muestra mensaje de error
 		            return false;
 			    }
 		    	else 
 		    	{
-		    		$("#mensaje_nombre_departamentos").fadeOut("slow"); //Muestra mensaje de error
+		    		$("#mensaje_id_tipo_formulas").fadeOut("slow"); //Muestra mensaje de error
 		            
 				}   
 
-
+		    	if (porcentaje_formulas == 0.00)
+		    	{
+			    	
+		    		$("#mensaje_porcentaje_formulas").text("Ingrese");
+		    		$("#mensaje_porcentaje_formulas").fadeIn("slow"); //Muestra mensaje de error
+		            return false;
+			    }
+		    	else 
+		    	{
+		    		$("#mensaje_porcentaje_formulas").fadeOut("slow"); //Muestra mensaje de error
+		            
+				}   
 		    	
 			}); 
 
 
-		        $( "#nombre_departamentos" ).focus(function() {
-				  $("#mensaje_nombre_departamentos").fadeOut("slow");
+		        $( "#id_tipo_formulas" ).focus(function() {
+				  $("#mensaje_id_tipo_formulas").fadeOut("slow");
 			    });
+		        $( "#porcentaje_formulas" ).focus(function() {
+					  $("#mensaje_porcentaje_formulas").fadeOut("slow");
+				    });
 		        		      
 				    
 		}); 

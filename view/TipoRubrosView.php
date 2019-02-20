@@ -104,6 +104,8 @@
                             		    					  
                                                               <label for="nombre_tipo_rubros" class="control-label">Nombres</label>
                                                               <input  type="text" class="form-control" id="nombre_tipo_rubros" name="nombre_tipo_rubros" value=""  placeholder="Nombre"/>
+                                                                 <input type="hidden" name="id_tipo_rubros" id="id_tipo_rubros" value="0" class="form-control"/>
+					                                        
                                                               <div id="mensaje_nombre_tipo_rubros" class="errores"></div>
                                                               	
                                                               
@@ -222,7 +224,7 @@
 		    	if (nombre_tipo_rubros == "")
 		    	{
 			    	
-		    		$("#mensaje_nombre_tipo_rubros").text("Introduzca Un Tipo de Rubro");
+		    		$("#mensaje_nombre_tipo_rubros").text("Introduzca Nombre");
 		    		$("#mensaje_nombre_tipo_rubros").fadeIn("slow"); //Muestra mensaje de error
 		            return false;
 			    }

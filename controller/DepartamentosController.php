@@ -88,16 +88,10 @@ class DepartamentosController extends ControladorBase{
         
         session_start();
         
-        $permisos_rol=new PermisosRolesModel();
-        $departamentos=new DepartamentosModel();
-        $nombre_controladores = "Departamentos";
-        $id_rol= $_SESSION['id_rol'];
-        $resultPer = $permisos_rol->getPermisosEditar("   controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
-        
-        if (!empty($resultPer))
+       
+        if (isset($_SESSION["id_usuarios"]))
         {
-            $resultado = null;
-            
+          
             $departamentos=new DepartamentosModel();
             
             if (isset ($_POST["nombre_departamentos"]) )
@@ -138,11 +132,15 @@ class DepartamentosController extends ControladorBase{
         }
         else
         {
-            $this->view("Error",array(
-                
-                "resultado"=>"No tiene Permisos de Insertar Departamentos"
-                
+            $error = TRUE;
+            $mensaje = "Te sesión a caducado, vuelve a iniciar sesión.";
+            
+            $this->view("Login",array(
+                "resultSet"=>"$mensaje", "error"=>$error
             ));
+            
+            
+            die();
             
             
         }
@@ -154,12 +152,7 @@ class DepartamentosController extends ControladorBase{
         
         session_start();
         
-        $permisos_rol=new PermisosRolesModel();
-        $nombre_controladores = "Departamentos";
-        $id_rol= $_SESSION['id_rol'];
-        $resultPer = $permisos_rol->getPermisosEditar("   controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
-        
-        if (!empty($resultPer))
+        if (isset($_SESSION["id_usuarios"]))
         {
             if(isset($_GET["id_departamentos"]))
             {
@@ -177,10 +170,15 @@ class DepartamentosController extends ControladorBase{
         }
         else
         {
-            $this->view("Error",array(
-                "resultado"=>"No tiene Permisos de Borrar Departamentos"
-                
+            $error = TRUE;
+            $mensaje = "Te sesión a caducado, vuelve a iniciar sesión.";
+            
+            $this->view("Login",array(
+                "resultSet"=>"$mensaje", "error"=>$error
             ));
+            
+            
+            die();
         }
         
     }

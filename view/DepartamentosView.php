@@ -104,6 +104,8 @@
                             		    					  
                                                               <label for="nombre_departamentos" class="control-label">Nombres</label>
                                                               <input  type="text" class="form-control" id="nombre_departamentos" name="nombre_departamentos" value=""  placeholder="Nombre"/>
+                                                              <input type="hidden" name="id_departamentos" id="id_departamentos" value="0" class="form-control"/>
+					                                         
                                                               <div id="mensaje_nombre_departamentos" class="errores"></div>
                                                               	
                                                               
@@ -222,7 +224,7 @@
 		    	if (nombre_departamentos == "")
 		    	{
 			    	
-		    		$("#mensaje_nombre_departamentos").text("Introduzca Un Tipo de Departamentos");
+		    		$("#mensaje_nombre_departamentos").text("Introduzca Nombre");
 		    		$("#mensaje_nombre_departamentos").fadeIn("slow"); //Muestra mensaje de error
 		            return false;
 			    }
