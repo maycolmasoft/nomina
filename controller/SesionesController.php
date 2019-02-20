@@ -100,12 +100,12 @@ class SesionesController extends ControladorBase{
 				$html.= "<table id='tabla_sesiones' class='tablesorter table table-striped table-bordered dt-responsive nowrap'>";
 				$html.= "<thead>";
 				$html.= "<tr>";
-				$html.='<th style="text-align: left;  font-size: 12px;"></th>';
-				$html.='<th style="text-align: left;  font-size: 12px;">Cedula</th>';
-				$html.='<th style="text-align: left;  font-size: 12px;">Nombre</th>';
-				$html.='<th style="text-align: left;  font-size: 12px;">Correo</th>';
-				$html.='<th style="text-align: left;  font-size: 12px;">Ip</th>';
-				$html.='<th style="text-align: left;  font-size: 12px;">Fecha Ultimo Acceso</th>';
+				$html.='<th style="text-align: left;  font-size: 13px;"></th>';
+				$html.='<th style="text-align: left;  font-size: 13px;">Cedula</th>';
+				$html.='<th style="text-align: left;  font-size: 13px;">Nombre</th>';
+				$html.='<th style="text-align: left;  font-size: 13px;">Correo</th>';
+				$html.='<th style="text-align: left;  font-size: 13px;">Ip</th>';
+				$html.='<th style="text-align: left;  font-size: 13px;">Fecha Ultimo Acceso</th>';
 				$html.='</tr>';
 				$html.='</thead>';
 				$html.='<tbody>';
@@ -116,12 +116,12 @@ class SesionesController extends ControladorBase{
 				{
 					$i++;
 					$html.='<tr>';
-					$html.='<td style="font-size: 11px;">'.$i.'</td>';
-					$html.='<td style="font-size: 11px;">'.$res->cedula_usuarios.'</td>';
-					$html.='<td style="font-size: 11px;">'.$res->nombre_usuarios.'</td>';
-					$html.='<td style="font-size: 11px;">'.$res->correo_usuarios.'</td>';
-					$html.='<td style="font-size: 11px;">'.$res->ip_sesiones.'</td>';
-					$html.='<td style="font-size: 11px;">'.date("d/m/Y", strtotime($res->creado)).'</td>';
+					$html.='<td style="font-size: 12px;">'.$i.'</td>';
+					$html.='<td style="font-size: 12px;">'.$res->cedula_usuarios.'</td>';
+					$html.='<td style="font-size: 12px;">'.$res->nombre_usuarios.'</td>';
+					$html.='<td style="font-size: 12px;">'.$res->correo_usuarios.'</td>';
+					$html.='<td style="font-size: 12px;">'.$res->ip_sesiones.'</td>';
+					$html.='<td style="font-size: 12px;">'.date("d/m/Y", strtotime($res->creado)).'</td>';
 					$html.='</tr>';
 				}
 	
