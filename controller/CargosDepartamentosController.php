@@ -128,14 +128,12 @@ class CargosDepartamentosController extends ControladorBase{
     							$html.='<td style="text-align: left; font-size: 13px;">'.$r->total.'</td>';
     							$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=CargosDepartamentos&action=index&id_cargos_departamentos='.$res->id_cargos_departamentos.'" class="btn btn-success" title="Editar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
     							$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="javascript:void(0);" class="btn btn-danger" style="font-size:65%;" title="Eliminar" disabled><i class="glyphicon glyphicon-trash"></i></a></span></td>';
-    							$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=CargosDepartamentos&action=generar_reporte_rol&id_cargos_departamentos='.$res->id_cargos_departamentos.'" class="btn btn-info" title="Reporte" style="font-size:65%;"><i class="glyphicon glyphicon-print"></i></a></span></td>';
     							
     						}else{
     						
     							$html.='<td style="text-align: left; font-size: 13px;">0</td>';
     							$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=CargosDepartamentos&action=index&id_cargos_departamentos='.$res->id_cargos_departamentos.'" class="btn btn-success" title="Editar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
     							$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=CargosDepartamentos&action=borrarId&id_cargos_departamentos='.$res->id_cargos_departamentos.'" class="btn btn-danger" title="Eliminar" style="font-size:65%;"><i class="glyphicon glyphicon-trash"></i></a></span></td>';
-    							$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=CargosDepartamentos&action=generar_reporte_rol&id_cargos_departamentos='.$res->id_cargos_departamentos.'" class="btn btn-info" title="Reporte" style="font-size:65%;"><i class="glyphicon glyphicon-print"></i></a></span></td>';
     							
     						}
     					}
@@ -144,7 +142,6 @@ class CargosDepartamentosController extends ControladorBase{
     						    $html.='<td style="text-align: left; font-size: 13px;">0</td>';
     						    $html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=CargosDepartamentos&action=index&id_cargos_departamentos='.$res->id_cargos_departamentos.'" class="btn btn-success" title="Editar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
     						    $html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=CargosDepartamentos&action=borrarId&id_cargos_departamentos='.$res->id_cargos_departamentos.'" class="btn btn-danger" title="Eliminar" style="font-size:65%;"><i class="glyphicon glyphicon-trash"></i></a></span></td>';
-    						    $html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=CargosDepartamentos&action=generar_reporte_rol&id_cargos_departamentos='.$res->id_cargos_departamentos.'" class="btn btn-info" title="Reporte" style="font-size:65%;"><i class="glyphicon glyphicon-print"></i></a></span></td>';
     						    
     					}
     				 
@@ -420,103 +417,7 @@ class CargosDepartamentosController extends ControladorBase{
 	
 	}
 	
-	public function  generar_reporte_rol(){
-	    
-	    session_start();
-	    $cargos = new CargosDepartamentosModel();
-	    $departamentos = new DepartamentosModel();
-	     
-	    
-	    $html="";
-	    $cedula_usuarios = $_SESSION["cedula_usuarios"];
-	    $fechaactual = getdate();
-	    $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
-	    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-	    $fechaactual=$dias[date('w')]." ".date('d')." de ".$meses[date('n')-1]. " del ".date('Y') ;
-	    
-	    $directorio = $_SERVER ['DOCUMENT_ROOT'] . '/rp_c';
-	    $dom=$directorio.'/view/dompdf/dompdf_config.inc.php';
-	    $domLogo=$directorio.'/view/images/logo.png';
-	    $logo = '<img src="'.$domLogo.'" alt="Responsive image" width="130" height="70">';
-	    
-	    
-	    
-	    if(!empty($cedula_usuarios)){
-	        
-	        
-	        if(isset($_GET["id_cargos_departamentos"])){
-	            
-	            
-	            $_id_cargos_departamentos = $_GET["id_cargos_departamentos"];
-	            
-	            $columnas = "  cargos_departamentos.nombre_cargo_departamentos, 
-                              cargos_departamentos.valor_sueldo_cargo_departamentos, 
-                              departamentos.nombre_departamentos";
-	            
-	            $tablas="public.cargos_departamentos, 
-                         public.departamentos";
-	            
-	            $where="departamentos.id_departamentos = cargos_departamentos.id_departamentos";
-	            
-	            $id="cargos_departamentos.id_cargos_departamentos";
-	            
-	            $resultSetCabeza=$departamentos->getCondiciones($columnas, $tablas, $where, $id);
-	            
-	            if(!empty($resultSetCabeza)){
-	            
-	                $_nombre_cargo_departamentos     =$resultSetCabeza[0]->nombre_cargo_departamentos;
-	                $_valor_sueldo_cargo_departamentos     =$resultSetCabeza[0]->valor_sueldo_cargo_departamentos;
-	                $_nombre_departamentos     =$resultSetCabeza[0]->nombre_departamentos;
-	                
-	             
-	                $html.= "<table style='width: 100%; margin-top:10px;' border=1 cellspacing=0>";
-	                $html.= "<tr>";
-	                $html.='<th style="text-align: center; font-size: 25px; "><b>ROL DE PAGOS INDIVIDUAL CFAPAZ</b></br>';
-	                $html.='<p style="text-align: left; font-size: 13px;">NÚMERO DEL EMPLEADO:';
-	                $html.='<p style="text-align: left; font-size: 13px;">NOMBRE DEL EMPLEADO:';
-	                $html.='<p style="text-align: left; font-size: 13px;">NÚMERO DEL CEDULA:';
-	                $html.='<p style="text-align: left; font-size: 13px;">CARGO:';
-	                $html.='<p style="text-align: left; font-size: 13px;">MES:';
-	                
-	                $html.='</tr>';
-	                $html.='</table>';
-	               
-	                $html.= "<table style='width: 100%; margin-top:10px;' border=1 cellspacing=0>";
-	                $html.= "<tr>";
-	                $html.='<th style="text-align: center; font-size: 13px;">INGRESOS</th>';
-	                $html.='<th style="text-align: center; font-size: 13px;">ROL DE PAGOS INDIVIDUAL CFAPAZ</th>';
-	                $html.='<p style="text-align: left; font-size: 13px;">NÚMERO DEL EMPLEADO:';
-	                $html.='<p style="text-align: left; font-size: 13px;">NOMBRE DEL EMPLEADO:';
-	                $html.='<p style="text-align: left; font-size: 13px;">NÚMERO DEL CEDULA:';
-	                $html.='<p style="text-align: left; font-size: 13px;">CARGO:';
-	                $html.='<p style="text-align: left; font-size: 13px;">MES:';
-	                
-	                $html.='</tr>';
-	                $html.='</table>';
-	                
-	            }
-	            
-	            
-	            
-	            $this->report("Rol",array( "resultSet"=>$html));
-	            die();
-	            
-	        }
-	        
-	        
-	        
-	        
-	    }else{
-	        
-	        $this->redirect("Usuarios","sesion_caducada");
-	        
-	    }
-	    
-	    
-	    
-	    
-	    
-	}
+	
 	
 	
 

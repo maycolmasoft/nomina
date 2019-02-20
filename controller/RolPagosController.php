@@ -631,8 +631,8 @@ class RolPagosController extends ControladorBase{
 				if(!empty($resultSetCabeza)){
 		
 		
-		
-					$_identificacion_empleados     =$resultSetCabeza[0]->identificacion_empleados;
+				    $_id_empleados     =$resultSetCabeza[0]->id_empleados;
+				    $_identificacion_empleados     =$resultSetCabeza[0]->identificacion_empleados;
 					$_apellidos_empleados       =$resultSetCabeza[0]->apellidos_empleados;
 					$_nombres_empleados   =$resultSetCabeza[0]->nombres_empleados;
 					$_direccion_empleados   =$resultSetCabeza[0]->direccion_empleados;
@@ -662,51 +662,100 @@ class RolPagosController extends ControladorBase{
 					$_valor_prestamos_internos =$resultSetCabeza[0]->valor_prestamos_internos;
 					$_dias_no_lavorados =$resultSetCabeza[0]->dias_no_lavorados;
 					$_total_egresos =$resultSetCabeza[0]->total_egresos;
-						
+					$_valor_total =$_total_ingresos - $_total_egresos[0];
+					$valor_FIN_INGRESOS=0; $valor_FIN_INGRESOS=$_total_ingresos+$_valor_decimo_tercero+$_valor_decimo_cuarto+$_valor_fondo_reserva;
+					$valor_FIN=0; $valor_FIN=$valor_FIN_INGRESOS-$_total_egresos;
+				
 					
-			
-					$html.='<p style="text-align: right;">'.$logo.'<hr style="height: 2px; background-color: black;"></p>';
-					$html.='<p style="text-align: center; font-size: 16px; margin-top:10px;"><b>ROL DE PAGOS INDIVIDUAL MILENIO S.A.</b></p>';
-		
-		
-					$html.='<table style="width: 100%; margin-top:30px;">';
-					$html.='<tr>';
-					$html.='<th colspan="2" style="text-align:left; font-size: 13px;">Tipo Persona</th>';
-					$html.='<th colspan="2" style="text-align:left; font-size: 13px;">Tipo Identificación</th>';
-					$html.='<th colspan="2" style="text-align:left; font-size: 13px;">Identificación</th>';
-					$html.='<th colspan="4" style="text-align:left; font-size: 13px;">Razón Social</th>';
-					$html.='<th colspan="2" style="text-align:left; font-size: 13px;">Tipo Consumo</th>';
-					$html.='<th colspan="2" style="text-align:left; font-size: 13px;">Estado Solicitud</th>';
-					$html.='</tr>';
-		
-					$html.='<tr>';
-					$html.='<td colspan="2" style="text-align:left; font-size: 13px;"></td>';
-					$html.='<td colspan="2" style="text-align:left; font-size: 13px;"></td>';
-					$html.='<td colspan="2" style="text-align:left; font-size: 13px;"></td>';
-					$html.='<td colspan="4" style="text-align:left; font-size: 13px;"></td>';
-					$html.='<td colspan="2" style="text-align:left; font-size: 13px;"></td>';
+					
+				
+					$html.='<p style="text-align: right;">'.$logo.'<hr style="height: 0px; background-color: black;"></p>';
+					$html.= "<table style='width: 100%; margin-top:10px;' border=1 cellspacing=0>";
+					$html.= "<tr>";
+					$html.='<th style="text-align: center; font-size: 20px; "><b>ROL DE PAGOS INDIVIDUAL</b></br>';
+					$html.='<p style="text-align: left; font-size: 12px;">NÚMERO DEL EMPLEADO: '.$_id_empleados.'</p>';
+					$html.='<p style="text-align: left; font-size: 12px;">NOMBRE DEL EMPLEADO: '.$_nombres_empleados.'</p>';
+					$html.='<p style="text-align: left; font-size: 12px;">NÚMERO DEL CEDULA: '.$_identificacion_empleados.'</p>';
+					$html.='<p style="text-align: left; font-size: 12px;">CARGO: '.$_nombre_cargo_departamentos.'</p>';
+					$html.='<p style="text-align: left; font-size: 12px;">MES: '.$_mes_afectacion.'</p>';
 					$html.='</tr>';
 					$html.='</table>';
-		
-		
-					$html.='<table style="width: 100%; margin-top:40px;">';
+					
+					$html.="<table style='width: 100%; margin-top:10px;' border=1 cellspacing=0>";
 					$html.='<tr>';
-					$html.='<th colspan="4" style="text-align:left; font-size: 13px;">Cajero</th>';
-					$html.='<th colspan="4" style="text-align:left; font-size: 13px;"></th>';
-					$html.='<th colspan="2" style="text-align:left; font-size: 13px;"></th>';
-					$html.='<th colspan="2" style="text-align:left; font-size: 13px;"></th>';
+					$html.='<th colspan="4" style="text-align:center; font-size: 13px;">INGRESOS:</th>';
+					$html.='<th colspan="4" style="text-align:center; font-size: 13px;">EGRESOS:</th>';
 					$html.='</tr>';
-		
 					$html.='<tr>';
-		
-					$html.='<td colspan="4" style="text-align:left; font-size: 13px;"></td>';
-					$html.='<td colspan="4" style="text-align:left; font-size: 13px;"></td>';
-					$html.='<td colspan="2" style="text-align:left; font-size: 13px;"></td>';
-					$html.='<td colspan="2" style="text-align:left; font-size: 13px;"></td>';
-		
+					$html.='<td colspan="4" style="text-align:left; font-size: 13px; height:30px;" valign=";">
+                    <BR><BR>                     
+                    SUELDO BASE: '.$_sueldo_mensual.'
+
+                    <BR><BR> 
+                    DIAS TRABAJADOS: '.$_dias_no_lavorados.'
+					<BR><BR>
+					SUELDO GANADO: '.$_sueldo_mensual.'
+					<BR><BR> 
+                    BONO: '.$_valor_bono.'
+              		<BR><BR> 
+                    COMISION: '.$_valor_comision.'
+             		<BR><BR> 
+				    HORAS 50 %: '.$_valor_horas_extras_50_porciento.'
+					<BR><BR>
+					HORAS 100%: '.$_valor_horas_extras_100_porciento.'
+                    <BR><BR>
+					DECIMO TERCERO: '.$_valor_decimo_tercero.'
+                    <BR><BR>
+					DECIMO CUARTO: '.$_valor_decimo_cuarto.'
+                    <BR><BR>
+					FONDO DE RESERVA: '.$_valor_fondo_reserva.'
+                	<BR><BR><BR><BR>
+					<B>TOTAL INGRESOS:</B> '.$valor_FIN_INGRESOS.'';
+				
+					
+					$html.='<td colspan="4" style="text-align:left; font-size: 13px; height:30px;" valign=";">
+                   <BR><BR>
+                    SUBSIDIO IESS: '.$_valor_subsidio_iess.'
+					<BR><BR>
+					APORTE PERSONAL IESS: '.$_valor_aporte_personal_iess.'
+					<BR><BR>
+                    IMPUESTO A LA RENTA: '.$_valor_impuesto_a_la_renta.'
+					<BR><BR>
+					PRESTAMOS IESS: '.$_valor_prestamos_iess.'
+                    <BR><BR>
+					PRESTAMOS IESS PH: '.$_valor_prestamos_iess_ph.'
+                    <BR><BR>
+					PRESTAMOS INTERNOS: '.$_valor_prestamos_internos.'
+                    <BR><BR>
+					ATRASOS: '.$_valor_atrasos.'										
+                    <BR><BR>
+                    DIAS NO LABORADOS: '.$_dias_no_lavorados.'
+					<BR><BR><BR><BR><BR><BR><BR><BR>
+					
+					<B>TOTAL EGRESOS:</B> '.$_total_egresos.'';
+		          
 					$html.='</tr>';
 					$html.='</table>';
+					$html.= "<table style='width: 100%; margin-top:0px;' border=1 cellspacing=0>";
+					$html.='<p style="text-align: left; font-size: 15px;"><b>&nbsp; TOTAL A RECIBIR: </b>'.$valor_FIN.'';
+					$html.='</table>';
+					
+					$html.="<table style='width: 100%; margin-top:30px;' border=1 cellspacing=0>";
+					$html.='<tr>';
+					$html.='<th colspan="4" style="text-align:center; font-size: 13px;">RECIBI CONFORME:</th>';
+					$html.='<th colspan="4" style="text-align:center; font-size: 13px;">ENTREGUE CONFORME:</th>';
+					$html.='</tr>';
+					$html.='<tr>';
+					$html.='<td colspan="4" style="text-align:center; font-size: 13px; height:70px;" valign="bottom;">EMPLEADO</td>';
+					$html.='<td colspan="4" style="text-align:center; font-size: 13px; height:70px;" valign="bottom;">JEFE ADMINISTRATIVO</td>';
+						
+					$html.='</tr>';
+					$html.='</table>';
+					
+					
+						
 		
+				
 		
 				}
 					
