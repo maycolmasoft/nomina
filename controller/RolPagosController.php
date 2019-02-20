@@ -271,8 +271,6 @@ class RolPagosController extends ControladorBase{
 		{
 		$rol_pagos=new NominaModel();
 			
-		
-		
 		$_valor_horas_extras_50_porciento=0;
 		$_valor_horas_extras_100_porciento=0;
 		$_valor_comision =0;
