@@ -149,7 +149,7 @@
 					<div id="load_rol_pagos_registrados" ></div>	
 					<div id="rol_pagos_registrados"></div>	
             
-         
+               
             
             </div>
             </div>
@@ -234,11 +234,9 @@
            		   }
 
 
-        	
+           	
        		   
         </script>
-        
-        
         
         
         
