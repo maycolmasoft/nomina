@@ -91,7 +91,7 @@ class RubrosVariablesController extends ControladorBase{
     		$count_query   = $cantidadResult;
     		$total_pages = ceil($cantidadResult/$per_page);
     
-    		 
+    		$cierre_nomina = new CierreNominaModel();
     
     		if($cantidadResult>0)
     		{
@@ -169,10 +169,24 @@ class RubrosVariablesController extends ControladorBase{
     				$html.='<td style="font-size: 13px;">'.$mes.'-'.$res->anio_afectacion.'</td>';
     				
     				
-    						
-    			    $html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=RubrosVariables&action=index&id_rubros_variables_empleados='.$res->id_rubros_variables_empleados.'" class="btn btn-success" title="Editar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
-    			    $html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=RubrosVariables&action=borrarId&id_rubros_variables_empleados='.$res->id_rubros_variables_empleados.'" class="btn btn-danger" title="Eliminar" style="font-size:65%;"><i class="glyphicon glyphicon-trash"></i></a></span></td>';
-    						    	
+    					
+    				$resultaa=$cierre_nomina->getBy("mes_cierre_nomina='$res->mes_afectacion' AND anio_cierre_nomina='$res->anio_afectacion' AND id_estado=1");
+    				
+    				if(!empty($resultaa)){
+    					
+    					$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="" class="btn btn-success" disabled title="Editar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
+    					$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="" class="btn btn-danger" disabled title="Eliminar" style="font-size:65%;"><i class="glyphicon glyphicon-trash"></i></a></span></td>';
+    					
+    					
+    				}else{
+    				
+    					$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=RubrosVariables&action=index&id_rubros_variables_empleados='.$res->id_rubros_variables_empleados.'" class="btn btn-success" title="Editar" style="font-size:65%;"><i class="glyphicon glyphicon-edit"></i></a></span></td>';
+    					$html.='<td style="font-size: 18px;"><span class="pull-right"><a href="index.php?controller=RubrosVariables&action=borrarId&id_rubros_variables_empleados='.$res->id_rubros_variables_empleados.'" class="btn btn-danger" title="Eliminar" style="font-size:65%;"><i class="glyphicon glyphicon-trash"></i></a></span></td>';
+    					
+    					
+    				}
+    				
+    			   		    	
     					 
     				
     				 

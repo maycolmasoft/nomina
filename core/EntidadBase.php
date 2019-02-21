@@ -163,6 +163,23 @@ class EntidadBase{
     	return $resultSet;
     }
     
+    
+    
+    public function getCondicionesSinOrder($columnas ,$tablas , $where){
+    	 
+    	$query=pg_query($this->con, "SELECT $columnas FROM $tablas WHERE $where");
+    	$resultSet = array();
+    	while ($row = pg_fetch_object($query)) {
+    		$resultSet[]=$row;
+    	}
+    
+    	return $resultSet;
+    }
+    
+    
+    
+    
+    
     public function getCondicionesValorMayor($columnas ,$tablas , $where){
     	 
     	$query=pg_query($this->con, "SELECT $columnas FROM $tablas WHERE $where");

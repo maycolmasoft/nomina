@@ -270,7 +270,9 @@ class RolPagosController extends ControladorBase{
 		if (isset(  $_SESSION['nombre_usuarios']) )
 		{
 		$rol_pagos=new NominaModel();
-			
+		$_lectura_biometrico = new LecturaBiometricoModel();
+		
+		
 		$_valor_horas_extras_50_porciento=0;
 		$_valor_horas_extras_100_porciento=0;
 		$_valor_comision =0;
@@ -300,10 +302,13 @@ class RolPagosController extends ControladorBase{
 			 $_id_usuarios                   = $_SESSION["id_usuarios"];
 		    
 			 
+			 
+			 
 		    if($_mes_afectacion > 0 && $_anio_afectacion > 0){
 		    	
 		    	$_columnas="empleados.id_empleados, 
-  							cargos_departamentos.valor_sueldo_cargo_departamentos";
+  							cargos_departamentos.valor_sueldo_cargo_departamentos,
+		    			    empleados.fecha_empieza_a_laborar";
 		    	$_tablas="public.empleados, 
 						  public.asignacion_empleados_cargos, 
 						  public.cargos_departamentos";
@@ -320,6 +325,7 @@ class RolPagosController extends ControladorBase{
 		    			
 		    			$_id_empelados = $res->id_empleados;
 		    			$_sueldo_mensual =$res->valor_sueldo_cargo_departamentos;
+		    			$_fecha_empieza_a_laborar =$res->fecha_empieza_a_laborar;
 		    			
 		    			if($_id_empelados >0){
 		    			
@@ -401,15 +407,94 @@ class RolPagosController extends ControladorBase{
 		    				
 		    			}
 		    			
+		    			
 		    			$_total_ingresos_temporal=0;
+		    			
+		    			$result_biometrico=$_lectura_biometrico->getBy("id_empleados='$_id_empelados' AND mes_afectacion='$_mes_afectacion' AND anio_afectacion='$_anio_afectacion'");
+		    			
+		    			if(!empty($result_biometrico)){
+		    				
+		    				$dias_trabajados=$result_biometrico[0]->dias_trabajados;
+		    				$dias_no_trabajados=$result_biometrico[0]->dias_no_trabajados;
+		    				$atrasos =new DateTime($result_biometrico[0]->atrasos);
+		    				
+		    			
+		    				$atrasos=$atrasos->format('H:i:s');
+		    				
+		    				
+		    				
+		    				$dias_pertenece_mes =$result_biometrico[0]->dias_pertenece_mes;
+		    			
+		    				$_total_ingresos_temporal=0;
+		    				
+		    				
+		    				
+		    				if($dias_pertenece_mes <> $dias_trabajados || $dias_no_trabajados > 0){
+		    					
+		    					$_valor_dia=$_sueldo_mensual/$dias_pertenece_mes;
+		    					$_sueldo_mensual=$_valor_dia*$dias_trabajados;
+		    					
+		    					
+		    				}
+		    				
+		    				
+		    				
+		    				if($atrasos>'00:00:00'){
+		    					
+		    					
+		    					$horas = substr($atrasos,0,2);
+		    					$minutos = substr($atrasos,3,2); //nos saltamos los : puntos
+		    					$segundos = substr($atrasos,6,2);
+		    					
+		    					
+		    					
+		    					
+		    					$_valor_dia=$_sueldo_mensual/$dias_pertenece_mes;
+		    					$_valor_hora=$_valor_dia/8;
+		    					$_valor_minuto=$_valor_hora/60;
+		    					
+		    					
+		    					$_valor_final_horas_atrasos=$_valor_hora*$horas;
+		    					$_valor_final_minutos_atrasos=$_valor_minuto*$minutos;
+		    					 
+		    					
+		    					
+		    					$_valor_atrasos=$_valor_final_horas_atrasos+$_valor_final_minutos_atrasos;
+		    					
+		    					
+		    					
+		    				}
+		    				
+		    				
+		    			}
+		    			
+		    			
+		    			
 		    			$_total_ingresos_temporal=$_sueldo_mensual+$_valor_bono+$_valor_horas_extras_50_porciento+$_valor_horas_extras_100_porciento+$_valor_comision;
 		    			
 		    			$_valor_aporte_personal_iess=$_total_ingresos_temporal*0.0935;
 		    			
 		    			$_valor_decimo_tercero=$_total_ingresos_temporal/12;
 		    			$_valor_decimo_cuarto=$_sueldo_mensual/12;
-		    			$_valor_fondo_reserva=$_total_ingresos_temporal*0.0833;
+		    			
+		    			
+		    			$date2 = date('Y-m-d');//
+		    			$dias = (strtotime($date2)-strtotime($_fecha_empieza_a_laborar))/86400;
+		    			$dias = abs($dias); $dias = floor($dias);
+		    			
+		    			
+		    			if($dias>365){
+		    				
+		    				$_valor_fondo_reserva=$_total_ingresos_temporal*0.0833;
+		    				
+		    			}else{
+		    				$_valor_fondo_reserva=0;
+		    				
+		    			}
+		    				
+		    			
 		    			 
+		    			
 		    			$_total_egresos=$_valor_subsidio_iess+$_valor_aporte_personal_iess+$_valor_impuesto_a_la_renta+$_valor_prestamos_iess+$_valor_prestamos_iess_ph+$_valor_prestamos_internos+$_valor_atrasos;
 		    			$_total_ingresos=$_total_ingresos_temporal+$_valor_decimo_tercero+$_valor_decimo_cuarto+$_valor_fondo_reserva;
 		    			
@@ -433,8 +518,9 @@ class RolPagosController extends ControladorBase{
 		    			'$_valor_prestamos_iess_ph',
 		    			'$_valor_prestamos_internos',
 		    			'$_valor_atrasos',
-		    			'$_dias_no_lavorados',
-		    			'$_total_egresos'";
+		    			'$dias_no_trabajados',
+		    			'$_total_egresos',
+		    			'$dias_trabajados'";
 		    			$rol_pagos->setFuncion($funcion);
 		    			$rol_pagos->setParametros($parametros);
 		    			$resultado=$rol_pagos->Insert();
@@ -605,7 +691,9 @@ class RolPagosController extends ControladorBase{
 					  nomina.dias_no_lavorados,
 					  nomina.total_egresos,
 					  nomina.estado_nomina,
-    			      departamentos.nombre_departamentos";
+    			      departamentos.nombre_departamentos,
+						nomina.dias_laborados,
+						cargos_departamentos.valor_sueldo_cargo_departamentos";
 				 
 				$tablas   = "public.nomina,
 					  public.empleados,
@@ -638,6 +726,59 @@ class RolPagosController extends ControladorBase{
 					$_celular_empleados =$resultSetCabeza[0]->celular_empleados;
 					$_nombre_cargo_departamentos	=$resultSetCabeza[0]->nombre_cargo_departamentos;
 					$_mes_afectacion =$resultSetCabeza[0]->mes_afectacion;
+					
+					
+					if($_mes_afectacion==1){
+						
+						$mes='ENERO';
+						
+					}ELSEIF($_mes_afectacion==2 ){
+						$mes='FEBRERO';
+							
+						
+					}ELSEIF( $_mes_afectacion==3){
+						$mes='MARZO';
+							
+						
+					}ELSEIF( $_mes_afectacion==4){
+						$mes='ABRIL';
+							
+						
+					}ELSEIF( $_mes_afectacion==5){
+						$mes='MAYO';
+							
+						
+					}ELSEIF( $_mes_afectacion==6){
+						$mes='JUNIO';
+							
+						
+					}ELSEIF( $_mes_afectacion==7){
+						$mes='JULIO';
+							
+						
+					}ELSEIF( $_mes_afectacion==8){
+						$mes='AGOSTO';
+							
+						
+					}ELSEIF($_mes_afectacion==9){
+						$mes='SEPTIEMBRE';
+							
+						
+					}ELSEIF($_mes_afectacion==10){
+						$mes='OCTUBRE';
+							
+						
+					}ELSEIF($_mes_afectacion==11){
+						
+						$mes='NOVIEMBRE';
+							
+					}ELSEIF($_mes_afectacion==12){
+						$mes='DICIEMBRE';
+							
+						
+					}
+					
+					
 					$_anio_afectacion =$resultSetCabeza[0]->anio_afectacion;
 		
 				
@@ -658,8 +799,11 @@ class RolPagosController extends ControladorBase{
 					$_valor_prestamos_iess_ph =$resultSetCabeza[0]->valor_prestamos_iess_ph;
 					$_valor_atrasos =$resultSetCabeza[0]->valor_atrasos;
 					$_valor_prestamos_internos =$resultSetCabeza[0]->valor_prestamos_internos;
-					$_dias_no_lavorados =$resultSetCabeza[0]->dias_no_lavorados;
+					$_dias_no_lavorados =(int)$resultSetCabeza[0]->dias_no_lavorados;
 					$_total_egresos =$resultSetCabeza[0]->total_egresos;
+					
+					$_dias_laborados =$resultSetCabeza[0]->dias_laborados;
+					$_valor_sueldo_cargo_departamentos=$resultSetCabeza[0]->valor_sueldo_cargo_departamentos;
 					$_valor_total =$_total_ingresos - $_total_egresos[0];
 					$valor_FIN_INGRESOS=0; $valor_FIN_INGRESOS=$_total_ingresos+$_valor_decimo_tercero+$_valor_decimo_cuarto+$_valor_fondo_reserva;
 					$valor_FIN=0; $valor_FIN=$valor_FIN_INGRESOS-$_total_egresos;
@@ -675,7 +819,7 @@ class RolPagosController extends ControladorBase{
 					$html.='<p style="text-align: left; font-size: 12px;">NOMBRE DEL EMPLEADO: '.$_nombres_empleados.'</p>';
 					$html.='<p style="text-align: left; font-size: 12px;">NÚMERO DEL CEDULA: '.$_identificacion_empleados.'</p>';
 					$html.='<p style="text-align: left; font-size: 12px;">CARGO: '.$_nombre_cargo_departamentos.'</p>';
-					$html.='<p style="text-align: left; font-size: 12px;">MES: '.$_mes_afectacion.'</p>';
+					$html.='<p style="text-align: left; font-size: 12px;">MES: '.$mes.'-'.$_anio_afectacion.'</p>';
 					$html.='</tr>';
 					$html.='</table>';
 					
@@ -687,10 +831,10 @@ class RolPagosController extends ControladorBase{
 					$html.='<tr>';
 					$html.='<td colspan="4" style="text-align:left; font-size: 13px; height:30px;" valign=";">
                     <BR><BR>                     
-                    SUELDO BASE: '.$_sueldo_mensual.'
+                    SUELDO BASE: '.$_valor_sueldo_cargo_departamentos.'
 
                     <BR><BR> 
-                    DIAS TRABAJADOS: '.$_dias_no_lavorados.'
+                    DIAS TRABAJADOS: '.$_dias_laborados.'
 					<BR><BR>
 					SUELDO GANADO: '.$_sueldo_mensual.'
 					<BR><BR> 

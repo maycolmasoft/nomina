@@ -297,6 +297,8 @@
                     	        <div class="col-lg-2 col-xs-12 col-md-2">
                     		    <div class="form-group">
                                                           <label for="mes_afectacion" class="control-label">Mes afectación:</label>
+                                                          <input type="hidden" class="form-control" id="mes_afectacion_verificacion" name="mes_afectacion_verificacion" value="" >
+                                                          
                                                           <select name="mes_afectacion" id="mes_afectacion"  class="form-control">
                                                           <option value="0" selected="selected">--Seleccione--</option>
                                                           <option value="1" <?php  if ( $resEdit->mes_afectacion =='1')  echo ' selected="selected" ' ; ?>>Enero</option>
@@ -323,8 +325,6 @@
                                                           <select name="anio_afectacion" id="anio_afectacion"  class="form-control">
                                                           <option value="0" selected="selected">--Seleccione--</option>
                                                           <option value="2019" <?php  if ( $resEdit->anio_afectacion =='2019')  echo ' selected="selected" ' ; ?>>2019</option>
-                                                          <option value="2020" <?php  if ( $resEdit->anio_afectacion =='2020')  echo ' selected="selected" ' ; ?>>2020</option>
-                                                          <option value="2021" <?php  if ( $resEdit->anio_afectacion =='2021')  echo ' selected="selected" ' ; ?>>2021</option>
                                                           </select> 
                                                           <div id="mensaje_anio_afectacion" class="errores"></div>
                                  </div>
@@ -569,6 +569,7 @@
                     	        <div class="col-lg-2 col-xs-12 col-md-2">
                     		    <div class="form-group">
                                                           <label for="mes_afectacion" class="control-label">Mes afectación:</label>
+                                                          <input type="hidden" class="form-control" id="mes_afectacion_verificacion" name="mes_afectacion_verificacion" value="" >
                                                           <select name="mes_afectacion" id="mes_afectacion"  class="form-control">
                                                           <option value="0" selected="selected">--Seleccione--</option>
                                                           <option value="1">Enero</option>
@@ -595,9 +596,7 @@
                                                           <select name="anio_afectacion" id="anio_afectacion"  class="form-control">
                                                           <option value="0" selected="selected">--Seleccione--</option>
                                                           <option value="2019">2019</option>
-                                                          <option value="2020">2020</option>
-                                                          <option value="2021">2021</option>
-                                                          </select> 
+                                                         </select> 
                                                           <div id="mensaje_anio_afectacion" class="errores"></div>
                                  </div>
                     		     </div>
@@ -674,7 +673,28 @@
       });
 	  </script>
    
-   
+   <script type="text/javascript">
+
+    	 $(document).ready( function (){
+    		 consulta_mes_a_generar_rol();
+  		   
+ 			});
+    	
+    	 function consulta_mes_a_generar_rol(){
+		     
+	    	   $.ajax({
+	                    url: 'index.php?controller=Procesos&action=consulta_mes_a_generar_rol',
+	                    type: 'POST',
+	                    data: {action:'ajax'},
+	                    success: function(x){
+	                      $("#mes_afectacion_verificacion").val(x);
+	                      
+	                    }
+	             });
+	        }
+		    
+
+    	</script>
    
    
    
@@ -917,7 +937,7 @@
 		    	var numero_horas_extras_100_porciento  =  $('#numero_horas_extras_100_porciento').val();
 		    	var mes_afectacion  =  $('#mes_afectacion').val();
 		    	var anio_afectacion  =  $('#anio_afectacion').val();
-		    	
+		    	var mes_afectacion_verificacion =  $('#mes_afectacion_verificacion').val();
 		    	
 		    	var contador=0;
 		    	var tiempo = tiempo || 1000;
@@ -1015,8 +1035,19 @@
 			    }
 		    	else 
 		    	{
-		    		$("#mensaje_mes_afectacion").fadeOut("slow"); //Muestra mensaje de error
-		            
+		    		if(mes_afectacion_verificacion.trim()==mes_afectacion){
+
+	                   	 $("#mensaje_mes_afectacion").fadeOut("slow"); //Muestra mensaje de error
+	    		            
+	                    }else{
+
+	                   	 $("#mensaje_mes_afectacion").text("El mes seleccionado no se puede procesar o ya se encuentra cerrado.");
+	    		    		$("#mensaje_mes_afectacion").fadeIn("slow"); //Muestra mensaje de error
+	    		    		$("html, body").animate({ scrollTop: $(mensaje_mes_afectacion).offset().top-120 }, tiempo);
+	    					
+	    		            return false;
+		                     }
+	                
 				}
 
 

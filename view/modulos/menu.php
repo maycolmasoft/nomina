@@ -77,6 +77,8 @@ $controladores=$_SESSION['controladores'];
            <li style="<?php echo getcontrolador("LecturasBiometrico",$controladores) ?>"><a href="index.php?controller=Procesos&action=index"><i class="fa fa-circle-o"></i>Subir Biometrico</a></li>
             <li style="<?php echo getcontrolador("RubrosVariables",$controladores) ?>"><a href="index.php?controller=RubrosVariables&action=index"><i class="fa fa-circle-o"></i> Rubros Variables</a></li>
             <li style="<?php echo getcontrolador("RolPagos",$controladores) ?>"><a href="index.php?controller=RolPagos&action=index"><i class="fa fa-circle-o"></i> Generar Rol Pagos</a></li>
+            <li style="<?php echo getcontrolador("CierreNomina",$controladores) ?>"><a href="index.php?controller=CierreNomina&action=index"><i class="fa fa-circle-o"></i> Cierre Nómina</a></li>
+         
           </ul>
         </li>
         
@@ -90,6 +92,8 @@ $controladores=$_SESSION['controladores'];
           </a>
           <ul class="treeview-menu">
             <li style="<?php echo getcontrolador("Sesiones",$controladores) ?>"><a href="index.php?controller=Sesiones&action=index">Sesiones</a></li>
+            <li style="<?php echo getcontrolador("ConsultaRoles",$controladores) ?>"><a href="index.php?controller=ConsultaRoles&action=index">Roles de Pago</a></li>
+          
           </ul>
         </li>
        
@@ -105,6 +109,8 @@ $controladores=$_SESSION['controladores'];
           </a>
           <ul class="treeview-menu">
             <li style="<?php echo getcontrolador("Sesiones",$controladores) ?>"><a href="index.php?controller=Sesiones&action=index">Sesiones</a></li>
+            <li style="<?php echo getcontrolador("ConsultaRoles",$controladores) ?>"><a href="index.php?controller=ConsultaRoles&action=index">Roles de Pago</a></li>
+          
           </ul>
         </li>
       </ul>
